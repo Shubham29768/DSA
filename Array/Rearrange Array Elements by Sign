@@ -1,0 +1,35 @@
+import java.util.*;
+
+public class RearrangeArray {
+
+    public static int[] rearrangeArray(int[] nums) {
+        int n = nums.length;
+        int[] result = new int[n];
+
+        List<Integer> positives = new ArrayList<>();
+        List<Integer> negatives = new ArrayList<>();
+
+        // Separate positives and negatives
+        for (int num : nums) {
+            if (num > 0) positives.add(num);
+            else negatives.add(num);
+        }
+
+        // Place them alternatively starting with positive
+        int posIndex = 0, negIndex = 0, i = 0;
+        while (posIndex < positives.size() && negIndex < negatives.size()) {
+            result[i++] = positives.get(posIndex++);
+            result[i++] = negatives.get(negIndex++);
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+        int[] nums1 = {3, 1, -2, -5, 2, -4};
+        int[] nums2 = {-1, 1};
+
+        System.out.println("Example 1: " + Arrays.toString(rearrangeArray(nums1))); // [3, -2, 1, -5, 2, -4]
+        System.out.println("Example 2: " + Arrays.toString(rearrangeArray(nums2))); // [1, -1]
+    }
+}
