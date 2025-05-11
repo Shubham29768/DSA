@@ -1,0 +1,42 @@
+public class StringToIntegerAtoi {
+    public static int myAtoi(String s) {
+        if (s == null || s.isEmpty()) return 0;
+
+        int index = 0, n = s.length();
+        int sign = 1;
+        long result = 0;
+
+        // Step 1: Ignore leading whitespace
+        while (index < n && s.charAt(index) == ' ') {
+            index++;
+        }
+
+        // Step 2: Check for '+' or '-'
+        if (index < n && (s.charAt(index) == '+' || s.charAt(index) == '-')) {
+            sign = (s.charAt(index) == '-') ? -1 : 1;
+            index++;
+        }
+
+        // Step 3: Convert digits and stop at first non-digit
+        while (index < n && Character.isDigit(s.charAt(index))) {
+            int digit = s.charAt(index) - '0';
+            result = result * 10 + digit;
+
+            // Step 4: Clamp if out of 32-bit range
+            if (sign * result <= Integer.MIN_VALUE) return Integer.MIN_VALUE;
+            if (sign * result >= Integer.MAX_VALUE) return Integer.MAX_VALUE;
+
+            index++;
+        }
+
+        return (int)(sign * result);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(myAtoi("42"));          // Output: 42
+        System.out.println(myAtoi("   -042"));     // Output: -42
+        System.out.println(myAtoi("1337c0d3"));    // Output: 1337
+        System.out.println(myAtoi("0-1"));         // Output: 0
+        System.out.println(myAtoi("words and 987"));// Output: 0
+    }
+}
