@@ -1,0 +1,26 @@
+public class ValidAnagram {
+    public static boolean isAnagram(String s, String t) {
+        if (s.length() != t.length()) return false;
+
+        int[] count = new int[26];  // for 'a' to 'z'
+
+        for (int i = 0; i < s.length(); i++) {
+            count[s.charAt(i) - 'a']++;  // increase for s
+            count[t.charAt(i) - 'a']--;  // decrease for t
+        }
+
+        for (int val : count) {
+            if (val != 0) return false;
+        }
+
+        return true;
+    }
+
+    public static void main(String[] args) {
+        String s1 = "anagram", t1 = "nagaram";
+        System.out.println("Output 1: " + isAnagram(s1, t1));  // true
+
+        String s2 = "rat", t2 = "car";
+        System.out.println("Output 2: " + isAnagram(s2, t2));  // false
+    }
+}
