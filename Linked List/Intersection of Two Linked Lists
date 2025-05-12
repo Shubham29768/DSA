@@ -1,0 +1,25 @@
+class ListNode {
+    int val;
+    ListNode next;
+
+    ListNode(int val) {
+        this.val = val;
+        this.next = null;
+    }
+}
+
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode a = headA;
+        ListNode b = headB;
+
+        // Traverse both lists. When one ends, move to the start of the other list.
+        // If they intersect, a == b eventually. Otherwise, both reach null.
+        while (a != b) {
+            a = (a == null) ? headB : a.next;
+            b = (b == null) ? headA : b.next;
+        }
+
+        return a; // Will be the intersecting node or null
+    }
+}
