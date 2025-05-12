@@ -1,0 +1,66 @@
+public class DeleteMiddleNode {
+
+    static class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode(int val) {
+            this.val = val;
+        }
+    }
+
+    public static ListNode deleteMiddle(ListNode head) {
+        // If there's only one node, return null
+        if (head == null || head.next == null) return null;
+
+        ListNode slow = head;
+        ListNode fast = head;
+        ListNode prev = null;
+
+        // Find the middle node using slow/fast pointers
+        while (fast != null && fast.next != null) {
+            prev = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // Remove the middle node
+        prev.next = slow.next;
+
+        return head;
+    }
+
+    // Helper to print the linked list
+    public static void printList(ListNode node) {
+        while (node != null) {
+            System.out.print(node.val + " ");
+            node = node.next;
+        }
+        System.out.println();
+    }
+
+    // Helper to create a linked list from an array
+    public static ListNode createList(int[] arr) {
+        if (arr.length == 0) return null;
+        ListNode head = new ListNode(arr[0]);
+        ListNode current = head;
+        for (int i = 1; i < arr.length; i++) {
+            current.next = new ListNode(arr[i]);
+            current = current.next;
+        }
+        return head;
+    }
+
+    public static void main(String[] args) {
+        int[] input = {1, 3, 4, 7, 1, 2, 6};
+        ListNode head = createList(input);
+
+        System.out.print("Original List: ");
+        printList(head);
+
+        ListNode updatedHead = deleteMiddle(head);
+
+        System.out.print("After Deleting Middle Node: ");
+        printList(updatedHead);
+    }
+}
