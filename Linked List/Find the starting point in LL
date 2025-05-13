@@ -1,0 +1,59 @@
+class ListNode {
+    int val;
+    ListNode next;
+
+    ListNode(int x) {
+        val = x;
+        next = null;
+    }
+}
+
+public class LinkedListCycleStart {
+
+    public ListNode detectCycle(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+
+        // Step 1: Detect if there's a cycle using Floyd's algorithm
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+
+            // Cycle detected
+            if (slow == fast) {
+                // Step 2: Find the start of the cycle
+                ListNode entry = head;
+                while (entry != slow) {
+                    entry = entry.next;
+                    slow = slow.next;
+                }
+                return entry; // cycle starts here
+            }
+        }
+
+        return null; // no cycle
+    }
+
+    // Optional: Main method to test
+    public static void main(String[] args) {
+        LinkedListCycleStart finder = new LinkedListCycleStart();
+
+        ListNode node1 = new ListNode(3);
+        ListNode node2 = new ListNode(2);
+        ListNode node3 = new ListNode(0);
+        ListNode node4 = new ListNode(-4);
+
+        node1.next = node2;
+        node2.next = node3;
+        node3.next = node4;
+        node4.next = node2; // creates a cycle at node2 (index 1)
+
+        ListNode cycleStart = finder.detectCycle(node1);
+
+        if (cycleStart != null) {
+            System.out.println("Cycle starts at node with value: " + cycleStart.val);
+        } else {
+            System.out.println("No cycle");
+        }
+    }
+}
