@@ -1,0 +1,42 @@
+import java.util.*;
+
+public class CombinationSum3 {
+
+    public static List<List<Integer>> combinationSum3(int k, int n) {
+        List<List<Integer>> result = new ArrayList<>();
+        backtrack(k, n, 1, new ArrayList<>(), result);
+        return result;
+    }
+
+    private static void backtrack(int k, int n, int start, List<Integer> current, List<List<Integer>> result) {
+        // Base case: valid combination
+        if (current.size() == k && n == 0) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
+
+        // Prune invalid paths
+        if (current.size() > k || n < 0) {
+            return;
+        }
+
+        // Try numbers from current `start` to 9
+        for (int i = start; i <= 9; i++) {
+            current.add(i);
+            backtrack(k, n - i, i + 1, current, result); // Move to next number
+            current.remove(current.size() - 1); // Backtrack
+        }
+    }
+
+    public static void main(String[] args) {
+        int k = 3;
+        int n = 9;
+
+        List<List<Integer>> combinations = combinationSum3(k, n);
+
+        System.out.println("Valid combinations of " + k + " numbers that sum to " + n + ":");
+        for (List<Integer> combo : combinations) {
+            System.out.println(combo);
+        }
+    }
+}
