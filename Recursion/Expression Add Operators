@@ -1,0 +1,55 @@
+import java.util.*;
+
+public class ExpressionAddOperators {
+
+    public static List<String> addOperators(String num, int target) {
+        List<String> result = new ArrayList<>();
+        if (num == null || num.length() == 0) return result;
+        backtrack(result, "", num, target, 0, 0, 0);
+        return result;
+    }
+
+    private static void backtrack(List<String> result, String path, String num, int target, int index, long eval, long prevNum) {
+        if (index == num.length()) {
+            if (eval == target) result.add(path);
+            return;
+        }
+
+        for (int i = index; i < num.length(); i++) {
+            // Prevent numbers with leading zeros
+            if (i != index && num.charAt(index) == '0') break;
+
+            String currStr = num.substring(index, i + 1);
+            long currNum = Long.parseLong(currStr);
+
+            if (index == 0) {
+                // First number, no operator
+                backtrack(result, currStr, num, target, i + 1, currNum, currNum);
+            } else {
+                // +
+                backtrack(result, path + "+" + currStr, num, target, i + 1, eval + currNum, currNum);
+
+                // -
+                backtrack(result, path + "-" + currStr, num, target, i + 1, eval - currNum, -currNum);
+
+                // *
+                backtrack(result, path + "*" + currStr, num, target, i + 1,
+                        eval - prevNum + prevNum * currNum, prevNum * currNum);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        String num1 = "123";
+        int target1 = 6;
+        System.out.println("Example 1: " + addOperators(num1, target1)); // ["1+2+3", "1*2*3"]
+
+        String num2 = "232";
+        int target2 = 8;
+        System.out.println("Example 2: " + addOperators(num2, target2)); // ["2*3+2", "2+3*2"]
+
+        String num3 = "3456237490";
+        int target3 = 9191;
+        System.out.println("Example 3: " + addOperators(num3, target3)); // []
+    }
+}
