@@ -1,0 +1,53 @@
+import java.util.*;
+
+public class SumOfSubarrayMinimums {
+    public static int sumSubarrayMins(int[] arr) {
+        int MOD = 1_000_000_007;
+        int n = arr.length;
+
+        // Previous Less Element (PLE)
+        int[] ple = new int[n];
+        // Next Less Element (NLE)
+        int[] nle = new int[n];
+
+        Deque<Integer> stack = new ArrayDeque<>();
+
+        // Compute PLE
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && arr[stack.peek()] > arr[i]) {
+                stack.pop();
+            }
+            ple[i] = stack.isEmpty() ? -1 : stack.peek();
+            stack.push(i);
+        }
+
+        stack.clear();
+
+        // Compute NLE
+        for (int i = n - 1; i >= 0; i--) {
+            while (!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
+                stack.pop();
+            }
+            nle[i] = stack.isEmpty() ? n : stack.peek();
+            stack.push(i);
+        }
+
+        // Compute the result
+        long result = 0;
+        for (int i = 0; i < n; i++) {
+            long left = i - ple[i];
+            long right = nle[i] - i;
+            result = (result + arr[i] * left * right) % MOD;
+        }
+
+        return (int) result;
+    }
+
+    public static void main(String[] args) {
+        int[] arr1 = {3, 1, 2, 4};
+        System.out.println("Output: " + sumSubarrayMins(arr1)); // Output: 17
+
+        int[] arr2 = {11, 81, 94, 43, 3};
+        System.out.println("Output: " + sumSubarrayMins(arr2)); // Output: 444
+    }
+}
