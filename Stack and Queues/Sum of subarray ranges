@@ -1,0 +1,54 @@
+import java.util.*;
+
+public class SubarrayRangeSum {
+    public static long subArrayRanges(int[] nums) {
+        return sumOfMaxs(nums) - sumOfMins(nums);
+    }
+
+    private static long sumOfMins(int[] nums) {
+        int n = nums.length;
+        long res = 0;
+        Deque<Integer> stack = new ArrayDeque<>();
+
+        for (int i = 0; i <= n; i++) {
+            int curr = (i == n) ? Integer.MIN_VALUE : nums[i];
+            while (!stack.isEmpty() && nums[stack.peek()] > curr) {
+                int mid = stack.pop();
+                int left = stack.isEmpty() ? -1 : stack.peek();
+                int right = i;
+                res += (long) nums[mid] * (mid - left) * (right - mid);
+            }
+            stack.push(i);
+        }
+        return res;
+    }
+
+    private static long sumOfMaxs(int[] nums) {
+        int n = nums.length;
+        long res = 0;
+        Deque<Integer> stack = new ArrayDeque<>();
+
+        for (int i = 0; i <= n; i++) {
+            int curr = (i == n) ? Integer.MAX_VALUE : nums[i];
+            while (!stack.isEmpty() && nums[stack.peek()] < curr) {
+                int mid = stack.pop();
+                int left = stack.isEmpty() ? -1 : stack.peek();
+                int right = i;
+                res += (long) nums[mid] * (mid - left) * (right - mid);
+            }
+            stack.push(i);
+        }
+        return res;
+    }
+
+    public static void main(String[] args) {
+        int[] nums1 = {1, 2, 3};
+        System.out.println("Output: " + subArrayRanges(nums1)); // Output: 4
+
+        int[] nums2 = {1, 3, 3};
+        System.out.println("Output: " + subArrayRanges(nums2)); // Output: 4
+
+        int[] nums3 = {4, -2, -3, 4, 1};
+        System.out.println("Output: " + subArrayRanges(nums3)); // Output: 59
+    }
+}
