@@ -1,0 +1,40 @@
+import java.util.*;
+
+public class RemoveKDigits {
+    public static String removeKdigits(String num, int k) {
+        Deque<Character> stack = new ArrayDeque<>();
+
+        for (char digit : num.toCharArray()) {
+            while (!stack.isEmpty() && k > 0 && stack.peekLast() > digit) {
+                stack.removeLast();
+                k--;
+            }
+            stack.addLast(digit);
+        }
+
+        // Remove remaining digits from the end if k > 0
+        while (k > 0 && !stack.isEmpty()) {
+            stack.removeLast();
+            k--;
+        }
+
+        // Build final result and remove leading zeros
+        StringBuilder result = new StringBuilder();
+        while (!stack.isEmpty()) {
+            result.append(stack.removeFirst());
+        }
+
+        // Remove leading zeros
+        while (result.length() > 0 && result.charAt(0) == '0') {
+            result.deleteCharAt(0);
+        }
+
+        return result.length() == 0 ? "0" : result.toString();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(removeKdigits("1432219", 3)); // Output: "1219"
+        System.out.println(removeKdigits("10200", 1));   // Output: "200"
+        System.out.println(removeKdigits("10", 2));      // Output: "0"
+    }
+}
