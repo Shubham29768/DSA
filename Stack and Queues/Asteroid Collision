@@ -1,0 +1,48 @@
+import java.util.*;
+
+public class AsteroidCollision {
+    public static int[] asteroidCollision(int[] asteroids) {
+        Deque<Integer> stack = new ArrayDeque<>();
+
+        for (int asteroid : asteroids) {
+            boolean destroyed = false;
+
+            // Only collide if asteroid is moving left and top of stack is moving right
+            while (!stack.isEmpty() && asteroid < 0 && stack.peek() > 0) {
+                if (stack.peek() < -asteroid) {
+                    stack.pop(); // Right asteroid explodes, continue loop
+                } else if (stack.peek() == -asteroid) {
+                    stack.pop(); // Both explode
+                    destroyed = true;
+                    break;
+                } else {
+                    destroyed = true; // Left asteroid explodes
+                    break;
+                }
+            }
+
+            if (!destroyed) {
+                stack.push(asteroid);
+            }
+        }
+
+        // Convert stack to array (in correct order)
+        int[] result = new int[stack.size()];
+        for (int i = result.length - 1; i >= 0; i--) {
+            result[i] = stack.pop();
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+        int[] asteroids1 = {5, 10, -5};
+        System.out.println(Arrays.toString(asteroidCollision(asteroids1))); // Output: [5, 10]
+
+        int[] asteroids2 = {8, -8};
+        System.out.println(Arrays.toString(asteroidCollision(asteroids2))); // Output: []
+
+        int[] asteroids3 = {10, 2, -5};
+        System.out.println(Arrays.toString(asteroidCollision(asteroids3))); // Output: [10]
+    }
+}
