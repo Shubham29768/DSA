@@ -1,0 +1,37 @@
+public class MaxConsecutiveOnesIII {
+
+    public static int longestOnes(int[] nums, int k) {
+        int left = 0, right = 0;
+        int maxLen = 0;
+        int zeros = 0;
+
+        while (right < nums.length) {
+            if (nums[right] == 0) {
+                zeros++;
+            }
+
+            while (zeros > k) {
+                if (nums[left] == 0) {
+                    zeros--;
+                }
+                left++;
+            }
+
+            maxLen = Math.max(maxLen, right - left + 1);
+            right++;
+        }
+
+        return maxLen;
+    }
+
+    // Test the function
+    public static void main(String[] args) {
+        int[] nums1 = {1,1,1,0,0,0,1,1,1,1,0};
+        int k1 = 2;
+        System.out.println(longestOnes(nums1, k1));  // Output: 6
+
+        int[] nums2 = {0,0,1,1,0,0,1,1,1,0,1,1,0,0,0,1,1,1,1};
+        int k2 = 3;
+        System.out.println(longestOnes(nums2, k2));  // Output: 10
+    }
+}
