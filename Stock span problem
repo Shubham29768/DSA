@@ -1,0 +1,34 @@
+import java.util.*;
+
+public class StockSpanner {
+    // Stack stores [price, span]
+    private Stack<int[]> stack;
+
+    public StockSpanner() {
+        stack = new Stack<>();
+    }
+
+    public int next(int price) {
+        int span = 1;
+
+        // Merge spans of previous days with lower or equal prices
+        while (!stack.isEmpty() && stack.peek()[0] <= price) {
+            span += stack.pop()[1];
+        }
+
+        stack.push(new int[]{price, span});
+        return span;
+    }
+
+    // Test the implementation
+    public static void main(String[] args) {
+        StockSpanner stockSpanner = new StockSpanner();
+
+        int[] inputs = {100, 80, 60, 70, 60, 75, 85};
+        System.out.println("Spans:");
+        for (int price : inputs) {
+            System.out.print(stockSpanner.next(price) + " ");
+        }
+        // Output: 1 1 1 2 1 4 6
+    }
+}
