@@ -1,0 +1,41 @@
+import java.util.*;
+
+public class LRUCache {
+    private final int capacity;
+    private final LinkedHashMap<Integer, Integer> cache;
+
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+
+        // accessOrder = true makes it act as LRU
+        this.cache = new LinkedHashMap<>(capacity, 0.75f, true);
+    }
+
+    public int get(int key) {
+        return cache.getOrDefault(key, -1);
+    }
+
+    public void put(int key, int value) {
+        cache.put(key, value);
+
+        if (cache.size() > capacity) {
+            // Remove least recently used (first entry)
+            Integer lruKey = cache.keySet().iterator().next();
+            cache.remove(lruKey);
+        }
+    }
+
+    // Test the implementation
+    public static void main(String[] args) {
+        LRUCache lRUCache = new LRUCache(2);
+        lRUCache.put(1, 1); // cache is {1=1}
+        lRUCache.put(2, 2); // cache is {1=1, 2=2}
+        System.out.println(lRUCache.get(1)); // return 1
+        lRUCache.put(3, 3); // evicts key 2
+        System.out.println(lRUCache.get(2)); // return -1 (not found)
+        lRUCache.put(4, 4); // evicts key 1
+        System.out.println(lRUCache.get(1)); // return -1 (not found)
+        System.out.println(lRUCache.get(3)); // return 3
+        System.out.println(lRUCache.get(4)); // return 4
+    }
+}
