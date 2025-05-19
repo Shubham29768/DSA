@@ -1,0 +1,29 @@
+import java.util.HashSet;
+
+public class LongestSubstringWithoutRepeats {
+    public static int lengthOfLongestSubstring(String s) {
+        int left = 0, right = 0, maxLen = 0;
+        HashSet<Character> set = new HashSet<>();
+
+        while (right < s.length()) {
+            char ch = s.charAt(right);
+            if (!set.contains(ch)) {
+                set.add(ch);
+                maxLen = Math.max(maxLen, right - left + 1);
+                right++;
+            } else {
+                set.remove(s.charAt(left));
+                left++;
+            }
+        }
+
+        return maxLen;
+    }
+
+    // Test the function
+    public static void main(String[] args) {
+        System.out.println(lengthOfLongestSubstring("abcabcbb")); // Output: 3
+        System.out.println(lengthOfLongestSubstring("bbbbb"));    // Output: 1
+        System.out.println(lengthOfLongestSubstring("pwwkew"));   // Output: 3
+    }
+}
