@@ -1,0 +1,28 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class SubstringsWithABC {
+    public static int numberOfSubstrings(String s) {
+        int[] count = new int[3]; // counts for a, b, c
+        int left = 0, result = 0;
+
+        for (int right = 0; right < s.length(); right++) {
+            count[s.charAt(right) - 'a']++;
+
+            // Shrink window from the left as long as it contains all three characters
+            while (count[0] > 0 && count[1] > 0 && count[2] > 0) {
+                result += s.length() - right; // All substrings from left to end are valid
+                count[s.charAt(left) - 'a']--;
+                left++;
+            }
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(numberOfSubstrings("abcabc")); // Output: 10
+        System.out.println(numberOfSubstrings("aaacb"));  // Output: 3
+        System.out.println(numberOfSubstrings("abc"));    // Output: 1
+    }
+}
