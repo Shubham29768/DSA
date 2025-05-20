@@ -1,0 +1,41 @@
+import java.util.HashMap;
+
+public class Main {
+
+    // Function to count subarrays with exactly k distinct integers
+    public static int subarraysWithKDistinct(int[] nums, int k) {
+        return atMostKDistinct(nums, k) - atMostKDistinct(nums, k - 1);
+    }
+
+    // Helper function: count subarrays with at most k distinct integers
+    private static int atMostKDistinct(int[] nums, int k) {
+        int left = 0, count = 0;
+        HashMap<Integer, Integer> freqMap = new HashMap<>();
+
+        for (int right = 0; right < nums.length; right++) {
+            freqMap.put(nums[right], freqMap.getOrDefault(nums[right], 0) + 1);
+
+            while (freqMap.size() > k) {
+                freqMap.put(nums[left], freqMap.get(nums[left]) - 1);
+                if (freqMap.get(nums[left]) == 0) {
+                    freqMap.remove(nums[left]);
+                }
+                left++;
+            }
+
+            count += right - left + 1;
+        }
+
+        return count;
+    }
+
+    public static void main(String[] args) {
+        int[] nums1 = {1, 2, 1, 2, 3};
+        int k1 = 2;
+        System.out.println("Output 1: " + subarraysWithKDistinct(nums1, k1)); // Output: 7
+
+        int[] nums2 = {1, 2, 1, 3, 4};
+        int k2 = 3;
+        System.out.println("Output 2: " + subarraysWithKDistinct(nums2, k2)); // Output: 3
+    }
+}
