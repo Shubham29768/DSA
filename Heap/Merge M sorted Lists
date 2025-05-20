@@ -1,0 +1,69 @@
+import java.util.PriorityQueue;
+
+class ListNode {
+    int val;
+    ListNode next;
+    ListNode(int val) { this.val = val; }
+}
+
+public class Main {
+
+    public static ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null || lists.length == 0) return null;
+
+        // Priority Queue (Min-Heap) by ListNode.val
+        PriorityQueue<ListNode> heap = new PriorityQueue<>((a, b) -> a.val - b.val);
+
+        // Add head of each non-null list to heap
+        for (ListNode node : lists) {
+            if (node != null) heap.offer(node);
+        }
+
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+
+        while (!heap.isEmpty()) {
+            ListNode node = heap.poll(); // smallest node
+            current.next = node;
+            current = current.next;
+
+            if (node.next != null) {
+                heap.offer(node.next);
+            }
+        }
+
+        return dummy.next;
+    }
+
+    // Utility method to convert array to linked list
+    public static ListNode arrayToList(int[] arr) {
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        for (int num : arr) {
+            current.next = new ListNode(num);
+            current = current.next;
+        }
+        return dummy.next;
+    }
+
+    // Utility method to print linked list
+    public static void printList(ListNode head) {
+        while (head != null) {
+            System.out.print(head.val + (head.next != null ? "->" : ""));
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        ListNode[] lists = new ListNode[] {
+            arrayToList(new int[]{1, 4, 5}),
+            arrayToList(new int[]{1, 3, 4}),
+            arrayToList(new int[]{2, 6})
+        };
+
+        ListNode merged = mergeKLists(lists);
+        System.out.print("Merged List: ");
+        printList(merged);
+    }
+}
