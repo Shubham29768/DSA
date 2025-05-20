@@ -1,0 +1,32 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class SubarraySumEqualsGoal {
+    public static int numSubarraysWithSum(int[] nums, int goal) {
+        Map<Integer, Integer> prefixSumFreq = new HashMap<>();
+        prefixSumFreq.put(0, 1); // base case: empty subarray sum is 0
+        
+        int sum = 0;
+        int count = 0;
+
+        for (int num : nums) {
+            sum += num;
+            if (prefixSumFreq.containsKey(sum - goal)) {
+                count += prefixSumFreq.get(sum - goal);
+            }
+            prefixSumFreq.put(sum, prefixSumFreq.getOrDefault(sum, 0) + 1);
+        }
+
+        return count;
+    }
+
+    public static void main(String[] args) {
+        int[] nums1 = {1, 0, 1, 0, 1};
+        int goal1 = 2;
+        System.out.println(numSubarraysWithSum(nums1, goal1)); // Output: 4
+
+        int[] nums2 = {0, 0, 0, 0, 0};
+        int goal2 = 0;
+        System.out.println(numSubarraysWithSum(nums2, goal2)); // Output: 15
+    }
+}
