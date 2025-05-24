@@ -1,0 +1,44 @@
+import java.util.*;
+
+public class TaskScheduler {
+
+    public int leastInterval(char[] tasks, int n) {
+        // Count frequency of each task
+        int[] taskCount = new int[26];
+        for (char task : tasks) {
+            taskCount[task - 'A']++;
+        }
+
+        // Sort frequencies in descending order
+        Arrays.sort(taskCount);
+        int maxFreq = taskCount[25] - 1;  // most frequent task count - 1
+        int idleSlots = maxFreq * n;
+
+        // Fill idle slots with remaining task frequencies
+        for (int i = 24; i >= 0 && taskCount[i] > 0; i--) {
+            idleSlots -= Math.min(taskCount[i], maxFreq);
+        }
+
+        // If idleSlots is negative, it means no need to idle
+        return idleSlots > 0 ? tasks.length + idleSlots : tasks.length;
+    }
+
+    public static void main(String[] args) {
+        TaskScheduler scheduler = new TaskScheduler();
+
+        // Example 1
+        char[] tasks1 = {'A', 'A', 'A', 'B', 'B', 'B'};
+        int n1 = 2;
+        System.out.println("Output 1: " + scheduler.leastInterval(tasks1, n1)); // Output: 8
+
+        // Example 2
+        char[] tasks2 = {'A', 'C', 'A', 'B', 'D', 'B'};
+        int n2 = 1;
+        System.out.println("Output 2: " + scheduler.leastInterval(tasks2, n2)); // Output: 6
+
+        // Example 3
+        char[] tasks3 = {'A', 'A', 'A', 'B', 'B', 'B'};
+        int n3 = 3;
+        System.out.println("Output 3: " + scheduler.leastInterval(tasks3, n3)); // Output: 10
+    }
+}
