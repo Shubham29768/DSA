@@ -1,0 +1,47 @@
+import java.util.PriorityQueue;
+
+public class KthLargest {
+    private PriorityQueue<Integer> minHeap;
+    private int k;
+
+    public KthLargest(int k, int[] nums) {
+        this.k = k;
+        minHeap = new PriorityQueue<>(k);
+
+        // Add all elements to the heap, maintain size k
+        for (int num : nums) {
+            add(num);
+        }
+    }
+
+    public int add(int val) {
+        if (minHeap.size() < k) {
+            minHeap.offer(val); // Just add if less than k
+        } else if (val > minHeap.peek()) {
+            minHeap.poll(); // Remove smallest in top k
+            minHeap.offer(val); // Add new larger element
+        } else {
+            // val is not among top k, ignore
+        }
+
+        return minHeap.peek(); // k-th largest is the smallest in heap
+    }
+
+    // Main method for testing
+    public static void main(String[] args) {
+        KthLargest kthLargest1 = new KthLargest(3, new int[]{4, 5, 8, 2});
+        System.out.println(kthLargest1.add(3));  // returns 4
+        System.out.println(kthLargest1.add(5));  // returns 5
+        System.out.println(kthLargest1.add(10)); // returns 5
+        System.out.println(kthLargest1.add(9));  // returns 8
+        System.out.println(kthLargest1.add(4));  // returns 8
+
+        System.out.println("------");
+
+        KthLargest kthLargest2 = new KthLargest(4, new int[]{7, 7, 7, 7, 8, 3});
+        System.out.println(kthLargest2.add(2));  // returns 7
+        System.out.println(kthLargest2.add(10)); // returns 7
+        System.out.println(kthLargest2.add(9));  // returns 7
+        System.out.println(kthLargest2.add(9));  // returns 8
+    }
+}
