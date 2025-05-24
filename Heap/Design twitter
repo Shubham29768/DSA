@@ -1,0 +1,90 @@
+import java.util.*;
+
+class Twitter {
+
+    private static int timestamp = 0;
+
+    // Tweet class to hold tweetId and its timestamp
+    private static class Tweet {
+        int time;
+        int tweetId;
+
+        public Tweet(int tweetId, int time) {
+            this.tweetId = tweetId;
+            this.time = time;
+        }
+    }
+
+    // Map userId -> set of followed users
+    private Map<Integer, Set<Integer>> followMap;
+
+    // Map userId -> list of tweets
+    private Map<Integer, List<Tweet>> tweetMap;
+
+    public Twitter() {
+        followMap = new HashMap<>();
+        tweetMap = new HashMap<>();
+    }
+
+    public void postTweet(int userId, int tweetId) {
+        tweetMap.putIfAbsent(userId, new ArrayList<>());
+        tweetMap.get(userId).add(new Tweet(tweetId, timestamp++));
+    }
+
+    public List<Integer> getNewsFeed(int userId) {
+        List<Tweet> tweets = new ArrayList<>();
+
+        // Add user's own tweets
+        if (tweetMap.containsKey(userId)) {
+            tweets.addAll(tweetMap.get(userId));
+        }
+
+        // Add tweets from followees
+        Set<Integer> followees = followMap.getOrDefault(userId, new HashSet<>());
+        for (int followeeId : followees) {
+            if (tweetMap.containsKey(followeeId)) {
+                tweets.addAll(tweetMap.get(followeeId));
+            }
+        }
+
+        // Use a max heap to get the top 10 most recent tweets
+        PriorityQueue<Tweet> heap = new PriorityQueue<>((a, b) -> b.time - a.time);
+        heap.addAll(tweets);
+
+        List<Integer> result = new ArrayList<>();
+        int count = 0;
+        while (!heap.isEmpty() && count < 10) {
+            result.add(heap.poll().tweetId);
+            count++;
+        }
+
+        return result;
+    }
+
+    public void follow(int followerId, int followeeId) {
+        if (followerId == followeeId) return; // can't follow oneself
+        followMap.putIfAbsent(followerId, new HashSet<>());
+        followMap.get(followerId).add(followeeId);
+    }
+
+    public void unfollow(int followerId, int followeeId) {
+        if (followMap.containsKey(followerId)) {
+            followMap.get(followerId).remove(followeeId);
+        }
+    }
+
+    // Main method to test the class
+    public static void main(String[] args) {
+        Twitter twitter = new Twitter();
+
+        twitter.postTweet(1, 5);                 // User 1 posts a tweet 5
+        System.out.println(twitter.getNewsFeed(1)); // [5]
+
+        twitter.follow(1, 2);                    // User 1 follows user 2
+        twitter.postTweet(2, 6);                 // User 2 posts tweet 6
+        System.out.println(twitter.getNewsFeed(1)); // [6, 5]
+
+        twitter.unfollow(1, 2);                  // User 1 unfollows user 2
+        System.out.println(twitter.getNewsFeed(1)); // [5]
+    }
+}
