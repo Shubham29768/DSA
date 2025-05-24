@@ -1,0 +1,36 @@
+public class LemonadeChange {
+    public boolean lemonadeChange(int[] bills) {
+        int five = 0, ten = 0;
+
+        for (int bill : bills) {
+            if (bill == 5) {
+                five++; // No change needed
+            } else if (bill == 10) {
+                if (five == 0) return false;
+                five--; // Give $5 as change
+                ten++;  // Keep $10
+            } else { // bill == 20
+                if (ten > 0 && five > 0) {
+                    ten--; // Give one $10
+                    five--; // Give one $5
+                } else if (five >= 3) {
+                    five -= 3; // Give three $5 bills
+                } else {
+                    return false; // Can't give $15 change
+                }
+            }
+        }
+        return true;
+    }
+
+    // Main method to test
+    public static void main(String[] args) {
+        LemonadeChange solution = new LemonadeChange();
+
+        int[] bills1 = {5, 5, 5, 10, 20};
+        System.out.println(solution.lemonadeChange(bills1)); // true
+
+        int[] bills2 = {5, 5, 10, 10, 20};
+        System.out.println(solution.lemonadeChange(bills2)); // false
+    }
+}
