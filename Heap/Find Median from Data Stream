@@ -1,0 +1,48 @@
+import java.util.PriorityQueue;
+import java.util.Collections;
+
+public class MedianFinder {
+    // Max heap for the smaller half
+    private PriorityQueue<Integer> maxHeap;
+
+    // Min heap for the larger half
+    private PriorityQueue<Integer> minHeap;
+
+    public MedianFinder() {
+        maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+        minHeap = new PriorityQueue<>();
+    }
+
+    public void addNum(int num) {
+        // Step 1: Add to maxHeap
+        maxHeap.offer(num);
+
+        // Step 2: Balance - largest of maxHeap should go to minHeap
+        minHeap.offer(maxHeap.poll());
+
+        // Step 3: Keep size property - maxHeap can be larger by at most 1
+        if (minHeap.size() > maxHeap.size()) {
+            maxHeap.offer(minHeap.poll());
+        }
+    }
+
+    public double findMedian() {
+        if (maxHeap.size() == minHeap.size()) {
+            // Even count: average of middle two
+            return (maxHeap.peek() + minHeap.peek()) / 2.0;
+        } else {
+            // Odd count: middle is top of maxHeap
+            return maxHeap.peek();
+        }
+    }
+
+    // Main method to test the class
+    public static void main(String[] args) {
+        MedianFinder medianFinder = new MedianFinder();
+        medianFinder.addNum(1);                  // arr = [1]
+        medianFinder.addNum(2);                  // arr = [1, 2]
+        System.out.println(medianFinder.findMedian()); // 1.5
+        medianFinder.addNum(3);                  // arr = [1, 2, 3]
+        System.out.println(medianFinder.findMedian()); // 2.0
+    }
+}
