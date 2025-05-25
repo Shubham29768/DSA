@@ -1,0 +1,30 @@
+public class MinimumJumps {
+    public int jump(int[] nums) {
+        int jumps = 0;
+        int currentEnd = 0;
+        int farthest = 0;
+
+        for (int i = 0; i < nums.length - 1; i++) {
+            // Update the farthest we can go from current position
+            farthest = Math.max(farthest, i + nums[i]);
+
+            // If we reach the end of the current jump range
+            if (i == currentEnd) {
+                jumps++;             // We need to jump
+                currentEnd = farthest; // Update range for next jump
+            }
+        }
+
+        return jumps;
+    }
+
+    public static void main(String[] args) {
+        MinimumJumps solver = new MinimumJumps();
+
+        int[] nums1 = {2, 3, 1, 1, 4};
+        System.out.println(solver.jump(nums1)); // Output: 2
+
+        int[] nums2 = {2, 3, 0, 1, 4};
+        System.out.println(solver.jump(nums2)); // Output: 2
+    }
+}
