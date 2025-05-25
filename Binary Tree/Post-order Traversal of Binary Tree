@@ -1,0 +1,33 @@
+import java.util.*;
+
+class TreeNode {
+    int val;
+    TreeNode left, right;
+    TreeNode(int val) { this.val = val; }
+}
+
+public class PostorderTraversal {
+
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        postorder(root, result);
+        return result;
+    }
+
+    private void postorder(TreeNode node, List<Integer> list) {
+        if (node == null) return;
+        postorder(node.left, list);     // Left
+        postorder(node.right, list);    // Right
+        list.add(node.val);             // Root
+    }
+
+    public static void main(String[] args) {
+        // Example: [1,null,2,3]
+        TreeNode root = new TreeNode(1);
+        root.right = new TreeNode(2);
+        root.right.left = new TreeNode(3);
+
+        PostorderTraversal solver = new PostorderTraversal();
+        System.out.println(solver.postorderTraversal(root)); // Output: [3, 2, 1]
+    }
+}
