@@ -1,0 +1,32 @@
+public class ValidParenthesisString {
+    public boolean checkValidString(String s) {
+        int low = 0;  // Minimum number of open parentheses
+        int high = 0; // Maximum number of open parentheses
+
+        for (char c : s.toCharArray()) {
+            if (c == '(') {
+                low++;
+                high++;
+            } else if (c == ')') {
+                if (low > 0) low--;
+                high--;
+            } else { // c == '*'
+                if (low > 0) low--; // Treat '*' as ')'
+                high++;            // Treat '*' as '('
+            }
+
+            // If high is negative, too many ')' — invalid
+            if (high < 0) return false;
+        }
+
+        // If low == 0, it's valid
+        return low == 0;
+    }
+
+    public static void main(String[] args) {
+        ValidParenthesisString vps = new ValidParenthesisString();
+        System.out.println(vps.checkValidString("()"));    // true
+        System.out.println(vps.checkValidString("(*)"));   // true
+        System.out.println(vps.checkValidString("(*))"));  // true
+    }
+}
