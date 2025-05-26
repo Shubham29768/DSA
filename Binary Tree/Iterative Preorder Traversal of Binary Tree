@@ -1,0 +1,73 @@
+import java.util.*;
+
+class TreeNode {
+    int val;
+    TreeNode left, right;
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+}
+
+public class PreorderTraversal {
+
+    // Recursive preorder: Root → Left → Right
+    public static List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        preorderDFS(root, result);
+        return result;
+    }
+
+    private static void preorderDFS(TreeNode node, List<Integer> result) {
+        if (node == null) return;
+        result.add(node.val);             // Visit root
+        preorderDFS(node.left, result);   // Left
+        preorderDFS(node.right, result);  // Right
+    }
+
+    // Optional helper to build tree from level-order array
+    public static TreeNode buildTree(Integer[] values) {
+        if (values.length == 0 || values[0] == null) return null;
+
+        TreeNode root = new TreeNode(values[0]);
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        int i = 1;
+
+        while (!queue.isEmpty() && i < values.length) {
+            TreeNode current = queue.poll();
+
+            if (i < values.length && values[i] != null) {
+                current.left = new TreeNode(values[i]);
+                queue.offer(current.left);
+            }
+            i++;
+
+            if (i < values.length && values[i] != null) {
+                current.right = new TreeNode(values[i]);
+                queue.offer(current.right);
+            }
+            i++;
+        }
+
+        return root;
+    }
+
+    public static void main(String[] args) {
+        // Test Case 1: [1, null, 2, 3]
+        TreeNode root1 = buildTree(new Integer[]{1, null, 2, 3});
+        System.out.println(preorderTraversal(root1)); // [1, 2, 3]
+
+        // Test Case 2: [1,2,3,4,5,null,8,null,null,6,7,9]
+        TreeNode root2 = buildTree(new Integer[]{1,2,3,4,5,null,8,null,null,6,7,9});
+        System.out.println(preorderTraversal(root2)); // [1, 2, 4, 5, 6, 7, 3, 8, 9]
+
+        // Test Case 3: []
+        TreeNode root3 = buildTree(new Integer[]{});
+        System.out.println(preorderTraversal(root3)); // []
+
+        // Test Case 4: [1]
+        TreeNode root4 = buildTree(new Integer[]{1});
+        System.out.println(preorderTraversal(root4)); // [1]
+    }
+}
