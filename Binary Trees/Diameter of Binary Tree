@@ -1,0 +1,58 @@
+// Definition for a binary tree node.
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    
+    TreeNode() {}
+    
+    TreeNode(int val) {
+        this.val = val;
+    }
+    
+    TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
+
+public class Solution {
+    private int maxDiameter = 0;
+
+    public int diameterOfBinaryTree(TreeNode root) {
+        depth(root);
+        return maxDiameter;
+    }
+
+    // Helper function to compute depth and update diameter
+    private int depth(TreeNode node) {
+        if (node == null) return 0;
+
+        int left = depth(node.left);
+        int right = depth(node.right);
+
+        // update max diameter if this path is larger
+        maxDiameter = Math.max(maxDiameter, left + right);
+
+        return Math.max(left, right) + 1;
+    }
+
+    // Test the method
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+
+        // Example 1: [1,2,3,4,5]
+        TreeNode root1 = new TreeNode(1);
+        root1.left = new TreeNode(2);
+        root1.right = new TreeNode(3);
+        root1.left.left = new TreeNode(4);
+        root1.left.right = new TreeNode(5);
+        System.out.println("Example 1: " + sol.diameterOfBinaryTree(root1)); // Output: 3
+
+        // Example 2: [1,2]
+        TreeNode root2 = new TreeNode(1);
+        root2.left = new TreeNode(2);
+        System.out.println("Example 2: " + sol.diameterOfBinaryTree(root2)); // Output: 1
+    }
+}
