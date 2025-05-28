@@ -1,0 +1,62 @@
+// Definition for a binary tree node.
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    
+    TreeNode() {}
+    
+    TreeNode(int val) {
+        this.val = val;
+    }
+    
+    TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
+
+public class Solution {
+    private int maxSum = Integer.MIN_VALUE;
+
+    public int maxPathSum(TreeNode root) {
+        maxGain(root);
+        return maxSum;
+    }
+
+    // Helper method to compute max gain from each node
+    private int maxGain(TreeNode node) {
+        if (node == null) return 0;
+
+        // Ignore negative gains
+        int leftGain = Math.max(maxGain(node.left), 0);
+        int rightGain = Math.max(maxGain(node.right), 0);
+
+        // Max path sum using this node as the highest node
+        int currentMaxPath = node.val + leftGain + rightGain;
+
+        // Update global maxSum if current path is better
+        maxSum = Math.max(maxSum, currentMaxPath);
+
+        // Return max gain including this node and one subtree
+        return node.val + Math.max(leftGain, rightGain);
+    }
+
+    // Test the method
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+
+        // Example 1: [1,2,3]
+        TreeNode root1 = new TreeNode(1);
+        root1.left = new TreeNode(2);
+        root1.right = new TreeNode(3);
+        System.out.println("Example 1: " + sol.maxPathSum(root1)); // Output: 6
+
+        // Example 2: [-10,9,20,null,null,15,7]
+        TreeNode root2 = new TreeNode(-10);
+        root2.left = new TreeNode(9);
+        root2.right = new TreeNode(20, new TreeNode(15), new TreeNode(7));
+        System.out.println("Example 2: " + sol.maxPathSum(root2)); // Output: 42
+    }
+}
