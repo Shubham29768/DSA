@@ -1,0 +1,52 @@
+// Definition for a binary tree node.
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode() {}
+    
+    TreeNode(int val) {
+        this.val = val;
+    }
+    
+    TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
+
+public class Solution {
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        // Both trees are empty
+        if (p == null && q == null) return true;
+
+        // One is empty, the other is not
+        if (p == null || q == null) return false;
+
+        // Check current values and recursively check children
+        return (p.val == q.val) &&
+               isSameTree(p.left, q.left) &&
+               isSameTree(p.right, q.right);
+    }
+
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+
+        // Example 1: [1,2,3] vs [1,2,3] => true
+        TreeNode p1 = new TreeNode(1, new TreeNode(2), new TreeNode(3));
+        TreeNode q1 = new TreeNode(1, new TreeNode(2), new TreeNode(3));
+        System.out.println("Example 1: " + sol.isSameTree(p1, q1)); // true
+
+        // Example 2: [1,2] vs [1,null,2] => false
+        TreeNode p2 = new TreeNode(1, new TreeNode(2), null);
+        TreeNode q2 = new TreeNode(1, null, new TreeNode(2));
+        System.out.println("Example 2: " + sol.isSameTree(p2, q2)); // false
+
+        // Example 3: [1,2,1] vs [1,1,2] => false
+        TreeNode p3 = new TreeNode(1, new TreeNode(2), new TreeNode(1));
+        TreeNode q3 = new TreeNode(1, new TreeNode(1), new TreeNode(2));
+        System.out.println("Example 3: " + sol.isSameTree(p3, q3)); // false
+    }
+}
