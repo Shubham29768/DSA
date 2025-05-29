@@ -1,0 +1,72 @@
+class TreeNode {
+    int val;
+    TreeNode left, right;
+    TreeNode(int x) { val = x; }
+}
+
+public class BSTDeletion {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) return null;
+
+        if (key < root.val) {
+            root.left = deleteNode(root.left, key);
+        } else if (key > root.val) {
+            root.right = deleteNode(root.right, key);
+        } else {
+            // Node found
+
+            // Case 1: No child or one child
+            if (root.left == null) return root.right;
+            if (root.right == null) return root.left;
+
+            // Case 2: Two children
+            // Find inorder successor (smallest in right subtree)
+            TreeNode minNode = findMin(root.right);
+            root.val = minNode.val;
+
+            // Delete inorder successor node
+            root.right = deleteNode(root.right, minNode.val);
+        }
+        return root;
+    }
+
+    private TreeNode findMin(TreeNode node) {
+        while (node.left != null) node = node.left;
+        return node;
+    }
+
+    // Optional: inorder print to verify
+    public void inorder(TreeNode root) {
+        if (root == null) return;
+        inorder(root.left);
+        System.out.print(root.val + " ");
+        inorder(root.right);
+    }
+
+    // Test example
+    public static void main(String[] args) {
+        /*
+          Input: root = [5,3,6,2,4,null,7], key = 3
+          Output example: [5,4,6,2,null,null,7]
+        */
+
+        TreeNode root = new TreeNode(5);
+        root.left = new TreeNode(3);
+        root.right = new TreeNode(6);
+        root.left.left = new TreeNode(2);
+        root.left.right = new TreeNode(4);
+        root.right.right = new TreeNode(7);
+
+        BSTDeletion solution = new BSTDeletion();
+
+        System.out.print("Before deletion (inorder): ");
+        solution.inorder(root);
+        System.out.println();
+
+        root = solution.deleteNode(root, 3);
+
+        System.out.print("After deletion (inorder): ");
+        solution.inorder(root);
+        System.out.println();
+    }
+}
