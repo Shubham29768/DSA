@@ -1,0 +1,50 @@
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int x) {
+        val = x;
+    }
+}
+
+public class CompleteBinaryTreeNodeCounter {
+
+    public int countNodes(TreeNode root) {
+        if (root == null) return 0;
+
+        int leftDepth = getDepth(root.left);
+        int rightDepth = getDepth(root.right);
+
+        if (leftDepth == rightDepth) {
+            // Left is a perfect binary tree
+            return (1 << leftDepth) + countNodes(root.right);
+        } else {
+            // Right is a perfect binary tree of height one less
+            return (1 << rightDepth) + countNodes(root.left);
+        }
+    }
+
+    // Helper to compute depth (leftmost path)
+    private int getDepth(TreeNode node) {
+        int depth = 0;
+        while (node != null) {
+            node = node.left;
+            depth++;
+        }
+        return depth;
+    }
+
+    // Optional: main method to test the code
+    public static void main(String[] args) {
+        TreeNode root = new TreeNode(1);
+        root.left = new TreeNode(2);
+        root.right = new TreeNode(3);
+        root.left.left = new TreeNode(4);
+        root.left.right = new TreeNode(5);
+        root.right.left = new TreeNode(6);
+
+        CompleteBinaryTreeNodeCounter counter = new CompleteBinaryTreeNodeCounter();
+        System.out.println("Total Nodes: " + counter.countNodes(root)); // Output: 6
+    }
+}
