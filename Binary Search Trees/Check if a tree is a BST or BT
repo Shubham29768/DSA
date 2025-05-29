@@ -1,0 +1,40 @@
+class TreeNode {
+    int val;
+    TreeNode left, right;
+    TreeNode(int x) { val = x; }
+}
+
+public class ValidateBST {
+    public boolean isValidBST(TreeNode root) {
+        return helper(root, null, null);
+    }
+
+    private boolean helper(TreeNode node, Integer min, Integer max) {
+        if (node == null) return true;
+
+        if ((min != null && node.val <= min) || (max != null && node.val >= max)) {
+            return false;
+        }
+
+        return helper(node.left, min, node.val) && helper(node.right, node.val, max);
+    }
+
+    // Test example
+    public static void main(String[] args) {
+        ValidateBST solution = new ValidateBST();
+
+        // Example 1
+        TreeNode root1 = new TreeNode(2);
+        root1.left = new TreeNode(1);
+        root1.right = new TreeNode(3);
+        System.out.println(solution.isValidBST(root1));  // true
+
+        // Example 2
+        TreeNode root2 = new TreeNode(5);
+        root2.left = new TreeNode(1);
+        root2.right = new TreeNode(4);
+        root2.right.left = new TreeNode(3);
+        root2.right.right = new TreeNode(6);
+        System.out.println(solution.isValidBST(root2));  // false
+    }
+}
