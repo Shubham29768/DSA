@@ -1,0 +1,88 @@
+import java.util.*;
+
+class TreeNode {
+    int val;
+    TreeNode left, right;
+    TreeNode(int x) { val = x; }
+}
+
+public class Codec {
+
+    // Serialize tree to string
+    public String serialize(TreeNode root) {
+        if (root == null) return "[]";
+
+        List<String> result = new ArrayList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+
+            if (node != null) {
+                result.add(String.valueOf(node.val));
+                queue.offer(node.left);
+                queue.offer(node.right);
+            } else {
+                result.add("null");
+            }
+        }
+
+        // Trim trailing nulls
+        int i = result.size() - 1;
+        while (i >= 0 && result.get(i).equals("null")) {
+            result.remove(i--);
+        }
+
+        return "[" + String.join(",", result) + "]";
+    }
+
+    // Deserialize string to tree
+    public TreeNode deserialize(String data) {
+        if (data.equals("[]")) return null;
+
+        String[] nodes = data.substring(1, data.length() - 1).split(",");
+        TreeNode root = new TreeNode(Integer.parseInt(nodes[0]));
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        int i = 1;
+        while (!queue.isEmpty() && i < nodes.length) {
+            TreeNode parent = queue.poll();
+
+            if (!nodes[i].equals("null")) {
+                TreeNode left = new TreeNode(Integer.parseInt(nodes[i]));
+                parent.left = left;
+                queue.offer(left);
+            }
+            i++;
+
+            if (i < nodes.length && !nodes[i].equals("null")) {
+                TreeNode right = new TreeNode(Integer.parseInt(nodes[i]));
+                parent.right = right;
+                queue.offer(right);
+            }
+            i++;
+        }
+
+        return root;
+    }
+
+    // Optional: test
+    public static void main(String[] args) {
+        Codec codec = new Codec();
+
+        TreeNode root = new TreeNode(1);
+        root.left = new TreeNode(2);
+        root.right = new TreeNode(3);
+        root.right.left = new TreeNode(4);
+        root.right.right = new TreeNode(5);
+
+        String serialized = codec.serialize(root);
+        System.out.println("Serialized: " + serialized); // [1,2,3,null,null,4,5]
+
+        TreeNode deserialized = codec.deserialize(serialized);
+        String again = codec.serialize(deserialized);
+        System.out.println("Deserialized + Serialized Again: " + again); // Should match original
+    }
+}
