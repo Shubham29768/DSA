@@ -1,0 +1,90 @@
+import java.util.*;
+
+// Definition for binary tree node
+class TreeNode {
+    int val;
+    TreeNode left, right;
+    TreeNode(int val) { this.val = val; }
+}
+
+public class InorderTraversal {
+
+    //  Recursive Inorder Traversal
+    public List<Integer> inorderRecursive(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        inorderDFS(root, result);
+        return result;
+    }
+
+    private void inorderDFS(TreeNode node, List<Integer> result) {
+        if (node == null) return;
+        inorderDFS(node.left, result);
+        result.add(node.val);
+        inorderDFS(node.right, result);
+    }
+
+    // Iterative Inorder Traversal
+    public List<Integer> inorderIterative(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode current = root;
+
+        while (current != null || !stack.isEmpty()) {
+            // Go to leftmost
+            while (current != null) {
+                stack.push(current);
+                current = current.left;
+            }
+
+            current = stack.pop();
+            result.add(current.val);
+            current = current.right;
+        }
+
+        return result;
+    }
+
+    //  Helper to build tree from array (LeetCode-style input)
+    public TreeNode buildTreeFromArray(Integer[] values) {
+        if (values.length == 0 || values[0] == null) return null;
+
+        TreeNode root = new TreeNode(values[0]);
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        int i = 1;
+
+        while (!queue.isEmpty() && i < values.length) {
+            TreeNode current = queue.poll();
+            if (i < values.length && values[i] != null) {
+                current.left = new TreeNode(values[i]);
+                queue.offer(current.left);
+            }
+            i++;
+            if (i < values.length && values[i] != null) {
+                current.right = new TreeNode(values[i]);
+                queue.offer(current.right);
+            }
+            i++;
+        }
+
+        return root;
+    }
+
+    //  Main to test all cases
+    public static void main(String[] args) {
+        InorderTraversal solution = new InorderTraversal();
+
+        Integer[][] testCases = {
+            {1, null, 2, 3},
+            {1, 2, 3, 4, 5, null, 8, null, null, 6, 7, 9},
+            {},
+            {1}
+        };
+
+        for (int t = 0; t < testCases.length; t++) {
+            TreeNode root = solution.buildTreeFromArray(testCases[t]);
+            List<Integer> result = solution.inorderIterative(root);
+            System.out.println("Test Case " + (t+1) + ": " + result);
+        }
+    }
+}
