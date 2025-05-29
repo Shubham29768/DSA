@@ -1,0 +1,96 @@
+import java.util.*;
+
+// TreeNode definition
+class TreeNode {
+    int val;
+    TreeNode left, right;
+
+    TreeNode(int x) {
+        val = x;
+    }
+}
+
+public class DistanceKNodes {
+
+    // Map to store the graph: node -> neighbors
+    Map<TreeNode, List<TreeNode>> graph = new HashMap<>();
+
+    // Step 1: Build the undirected graph
+    private void buildGraph(TreeNode node, TreeNode parent) {
+        if (node == null) return;
+
+        graph.putIfAbsent(node, new ArrayList<>());
+        if (parent != null) {
+            graph.get(node).add(parent);
+            graph.get(parent).add(node);
+        }
+
+        buildGraph(node.left, node);
+        buildGraph(node.right, node);
+    }
+
+    // Step 2: BFS from target to find nodes at distance K
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
+        buildGraph(root, null); // build undirected graph from tree
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        Set<TreeNode> visited = new HashSet<>();
+
+        queue.offer(target);
+        visited.add(target);
+
+        int currentLevel = 0;
+
+        while (!queue.isEmpty()) {
+            if (currentLevel == k) break;
+
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                for (TreeNode neighbor : graph.get(node)) {
+                    if (!visited.contains(neighbor)) {
+                        visited.add(neighbor);
+                        queue.offer(neighbor);
+                    }
+                }
+            }
+            currentLevel++;
+        }
+
+        List<Integer> result = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            result.add(queue.poll().val);
+        }
+
+        return result;
+    }
+
+    // Sample usage
+    public static void main(String[] args) {
+        /*
+            Tree:
+                   3
+                 /   \
+                5     1
+               / \   / \
+              6   2 0   8
+                 / \
+                7   4
+        */
+        TreeNode root = new TreeNode(3);
+        root.left = new TreeNode(5);
+        root.right = new TreeNode(1);
+        root.left.left = new TreeNode(6);
+        root.left.right = new TreeNode(2);
+        root.right.left = new TreeNode(0);
+        root.right.right = new TreeNode(8);
+        root.left.right.left = new TreeNode(7);
+        root.left.right.right = new TreeNode(4);
+
+        TreeNode target = root.left; // Node with value 5
+
+        DistanceKNodes sol = new DistanceKNodes();
+        List<Integer> output = sol.distanceK(root, target, 2);
+        System.out.println("Nodes at distance 2 from target: " + output); // Expected: [7,4,1]
+    }
+}
