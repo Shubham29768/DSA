@@ -1,0 +1,65 @@
+class TreeNode {
+    int val;
+    TreeNode left, right;
+    TreeNode(int x) { val = x; }
+}
+
+public class FlattenBinaryTree {
+
+    public void flatten(TreeNode root) {
+        if (root == null) return;
+
+        flatten(root.left);
+        flatten(root.right);
+
+        TreeNode leftSubtree = root.left;
+        TreeNode rightSubtree = root.right;
+
+        root.left = null;         // Set left to null
+        root.right = leftSubtree; // Move left subtree to right
+
+        // Find the end of new right subtree
+        TreeNode current = root;
+        while (current.right != null) {
+            current = current.right;
+        }
+
+        // Attach old right subtree
+        current.right = rightSubtree;
+    }
+
+    // Optional: preorder print to verify
+    public void printPreorder(TreeNode root) {
+        while (root != null) {
+            System.out.print(root.val + " ");
+            root = root.right;
+        }
+        System.out.println();
+    }
+
+    // Test example
+    public static void main(String[] args) {
+        /*
+            Input: [1,2,5,3,4,null,6]
+                  1
+                 / \
+                2   5
+               / \   \
+              3   4   6
+
+            Expected flattened:
+            1 -> 2 -> 3 -> 4 -> 5 -> 6
+        */
+
+        TreeNode root = new TreeNode(1);
+        root.left = new TreeNode(2);
+        root.right = new TreeNode(5);
+        root.left.left = new TreeNode(3);
+        root.left.right = new TreeNode(4);
+        root.right.right = new TreeNode(6);
+
+        FlattenBinaryTree solution = new FlattenBinaryTree();
+        solution.flatten(root);
+        solution.printPreorder(root);  // Output: 1 2 3 4 5 6
+    }
+}
