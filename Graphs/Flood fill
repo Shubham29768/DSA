@@ -1,0 +1,49 @@
+public class FloodFill {
+
+    public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+        int originalColor = image[sr][sc];
+
+        // If the original color is the same as newColor, nothing to change
+        if (originalColor == newColor) return image;
+
+        dfs(image, sr, sc, originalColor, newColor);
+        return image;
+    }
+
+    private void dfs(int[][] image, int r, int c, int color, int newColor) {
+        // Check if out of bounds or not the same color as original
+        if (r < 0 || r >= image.length || c < 0 || c >= image[0].length || image[r][c] != color)
+            return;
+
+        image[r][c] = newColor;
+
+        // Visit 4-directionally
+        dfs(image, r + 1, c, color, newColor);
+        dfs(image, r - 1, c, color, newColor);
+        dfs(image, r, c + 1, color, newColor);
+        dfs(image, r, c - 1, color, newColor);
+    }
+
+    // Test example
+    public static void main(String[] args) {
+        FloodFill ff = new FloodFill();
+
+        int[][] image1 = {{1,1,1},{1,1,0},{1,0,1}};
+        int[][] result1 = ff.floodFill(image1, 1, 1, 2);
+        print(result1);  // [[2,2,2],[2,2,0],[2,0,1]]
+
+        int[][] image2 = {{0,0,0},{0,0,0}};
+        int[][] result2 = ff.floodFill(image2, 0, 0, 0);
+        print(result2);  // [[0,0,0],[0,0,0]]
+    }
+
+    private static void print(int[][] image) {
+        for (int[] row : image) {
+            for (int val : row) {
+                System.out.print(val + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+}
