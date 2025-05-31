@@ -1,0 +1,72 @@
+// Definition for a binary tree node.
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+}
+
+public class LCABST {
+
+    // Function to find LCA of nodes p and q in BST
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        // Base case
+        if (root == null) return null;
+
+        // If both nodes are smaller than root, LCA lies in the left subtree
+        if (p.val < root.val && q.val < root.val) {
+            return lowestCommonAncestor(root.left, p, q);
+        }
+
+        // If both nodes are greater than root, LCA lies in the right subtree
+        if (p.val > root.val && q.val > root.val) {
+            return lowestCommonAncestor(root.right, p, q);
+        }
+
+        // Else, root is the LCA
+        return root;
+    }
+
+    // Helper method to insert nodes into BST (for building test tree)
+    public TreeNode insert(TreeNode root, int val) {
+        if (root == null) return new TreeNode(val);
+        if (val < root.val) root.left = insert(root.left, val);
+        else root.right = insert(root.right, val);
+        return root;
+    }
+
+    // Main method to test the code
+    public static void main(String[] args) {
+        LCABST tree = new LCABST();
+
+        // Constructing the BST as in example 1
+        int[] values = {6, 2, 8, 0, 4, 7, 9, 3, 5};
+        TreeNode root = null;
+        for (int val : values) {
+            root = tree.insert(root, val);
+        }
+
+        // Example 1: LCA of 2 and 8
+        TreeNode p1 = new TreeNode(2);
+        TreeNode q1 = new TreeNode(8);
+        TreeNode lca1 = tree.lowestCommonAncestor(root, p1, q1);
+        System.out.println("LCA of 2 and 8: " + lca1.val);  // Output: 6
+
+        // Example 2: LCA of 2 and 4
+        TreeNode p2 = new TreeNode(2);
+        TreeNode q2 = new TreeNode(4);
+        TreeNode lca2 = tree.lowestCommonAncestor(root, p2, q2);
+        System.out.println("LCA of 2 and 4: " + lca2.val);  // Output: 2
+
+        // Example 3: LCA of 2 and 1
+        TreeNode root2 = new TreeNode(2);
+        root2.left = new TreeNode(1);
+        TreeNode p3 = new TreeNode(2);
+        TreeNode q3 = new TreeNode(1);
+        TreeNode lca3 = tree.lowestCommonAncestor(root2, p3, q3);
+        System.out.println("LCA of 2 and 1: " + lca3.val);  // Output: 2
+    }
+}
