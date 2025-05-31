@@ -1,0 +1,68 @@
+import java.util.*;
+
+public class RottingOranges {
+
+    public int orangesRotting(int[][] grid) {
+        int rows = grid.length, cols = grid[0].length;
+        Queue<int[]> queue = new LinkedList<>();
+        int fresh = 0;
+
+        // Step 1: Initialize the queue with all initially rotten oranges
+        // and count all fresh oranges
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (grid[r][c] == 2) {
+                    queue.offer(new int[]{r, c});
+                } else if (grid[r][c] == 1) {
+                    fresh++;
+                }
+            }
+        }
+
+        if (fresh == 0) return 0; // No fresh oranges
+
+        int minutes = -1;
+        int[][] directions = {{1,0},{-1,0},{0,1},{0,-1}};
+
+        // Step 2: BFS - Spread the rot level by level
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            minutes++;
+
+            for (int i = 0; i < size; i++) {
+                int[] cell = queue.poll();
+                int row = cell[0], col = cell[1];
+
+                for (int[] dir : directions) {
+                    int newRow = row + dir[0], newCol = col + dir[1];
+
+                    // If adjacent cell is fresh, rot it
+                    if (newRow >= 0 && newRow < rows &&
+                        newCol >= 0 && newCol < cols &&
+                        grid[newRow][newCol] == 1) {
+
+                        grid[newRow][newCol] = 2; // Rot the orange
+                        fresh--;
+                        queue.offer(new int[]{newRow, newCol});
+                    }
+                }
+            }
+        }
+
+        return (fresh == 0) ? minutes : -1;
+    }
+
+    // Test example
+    public static void main(String[] args) {
+        RottingOranges solver = new RottingOranges();
+
+        int[][] grid1 = {{2,1,1},{1,1,0},{0,1,1}};
+        System.out.println("Output 1: " + solver.orangesRotting(grid1)); // 4
+
+        int[][] grid2 = {{2,1,1},{0,1,1},{1,0,1}};
+        System.out.println("Output 2: " + solver.orangesRotting(grid2)); // -1
+
+        int[][] grid3 = {{0,2}};
+        System.out.println("Output 3: " + solver.orangesRotting(grid3)); // 0
+    }
+}
