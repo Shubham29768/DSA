@@ -1,0 +1,72 @@
+// Definition for a binary tree node.
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+}
+
+public class BSTFromPreorder {
+
+    private int index = 0;
+
+    public TreeNode bstFromPreorder(int[] preorder) {
+        return build(preorder, Integer.MAX_VALUE);
+    }
+
+    private TreeNode build(int[] preorder, int bound) {
+        // If all elements are used or current is greater than allowed bound, return null
+        if (index == preorder.length || preorder[index] > bound) {
+            return null;
+        }
+
+        int val = preorder[index++];
+        TreeNode root = new TreeNode(val);
+        
+        // Left subtree with upper bound = root.val
+        root.left = build(preorder, val);
+        // Right subtree with current bound
+        root.right = build(preorder, bound);
+
+        return root;
+    }
+
+    // For testing: Inorder traversal to confirm tree structure
+    public void inorder(TreeNode root) {
+        if (root == null) return;
+        inorder(root.left);
+        System.out.print(root.val + " ");
+        inorder(root.right);
+    }
+
+    // For testing: Preorder traversal to confirm structure matches input
+    public void preorder(TreeNode root) {
+        if (root == null) return;
+        System.out.print(root.val + " ");
+        preorder(root.left);
+        preorder(root.right);
+    }
+
+    public static void main(String[] args) {
+        BSTFromPreorder builder = new BSTFromPreorder();
+
+        int[] preorder1 = {8, 5, 1, 7, 10, 12};
+        TreeNode root1 = builder.bstFromPreorder(preorder1);
+        System.out.print("Inorder (should be sorted): ");
+        builder.inorder(root1);
+        System.out.println("\nPreorder (should match input): ");
+        builder.preorder(root1);
+
+        System.out.println();
+
+        int[] preorder2 = {1, 3};
+        TreeNode root2 = builder.bstFromPreorder(preorder2);
+        System.out.print("Inorder (should be sorted): ");
+        builder.inorder(root2);
+        System.out.println("\nPreorder (should match input): ");
+        builder.preorder(root2);
+    }
+}
