@@ -1,0 +1,49 @@
+public class NumberOfProvinces {
+
+    public int findCircleNum(int[][] isConnected) {
+        int n = isConnected.length;
+        boolean[] visited = new boolean[n];
+        int provinces = 0;
+
+        // Visit each city
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                dfs(isConnected, visited, i);
+                provinces++;  // One full province explored
+            }
+        }
+
+        return provinces;
+    }
+
+    // DFS traversal to visit all cities in a province
+    private void dfs(int[][] isConnected, boolean[] visited, int city) {
+        visited[city] = true;
+
+        for (int neighbor = 0; neighbor < isConnected.length; neighbor++) {
+            if (isConnected[city][neighbor] == 1 && !visited[neighbor]) {
+                dfs(isConnected, visited, neighbor);
+            }
+        }
+    }
+
+    // Test example
+    public static void main(String[] args) {
+        NumberOfProvinces solution = new NumberOfProvinces();
+
+        int[][] isConnected1 = {
+            {1, 1, 0},
+            {1, 1, 0},
+            {0, 0, 1}
+        };
+        System.out.println("Output 1: " + solution.findCircleNum(isConnected1)); // 2
+
+        int[][] isConnected2 = {
+            {1, 0, 0},
+            {0, 1, 0},
+            {0, 0, 1}
+        };
+        System.out.println("Output 2: " + solution.findCircleNum(isConnected2)); // 3
+    }
+}
+
