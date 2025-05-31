@@ -1,0 +1,73 @@
+import java.util.Stack;
+
+// Definition for a binary tree node.
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+}
+
+public class BSTIterator {
+
+    private Stack<TreeNode> stack;
+
+    // Constructor: push all the leftmost nodes from root
+    public BSTIterator(TreeNode root) {
+        stack = new Stack<>();
+        pushLeftBranch(root);
+    }
+
+    // Push all left children of current node into stack
+    private void pushLeftBranch(TreeNode node) {
+        while (node != null) {
+            stack.push(node);
+            node = node.left;
+        }
+    }
+
+    // Return the next smallest number
+    public int next() {
+        TreeNode curr = stack.pop();
+        if (curr.right != null) {
+            pushLeftBranch(curr.right);
+        }
+        return curr.val;
+    }
+
+    // Return true if there is a next smallest number
+    public boolean hasNext() {
+        return !stack.isEmpty();
+    }
+
+    // Test main method
+    public static void main(String[] args) {
+        /*
+            BST structure:
+                  7
+                 / \
+                3   15
+                   /  \
+                  9    20
+         */
+        TreeNode root = new TreeNode(7);
+        root.left = new TreeNode(3);
+        root.right = new TreeNode(15);
+        root.right.left = new TreeNode(9);
+        root.right.right = new TreeNode(20);
+
+        BSTIterator iterator = new BSTIterator(root);
+        System.out.println(iterator.next());    // 3
+        System.out.println(iterator.next());    // 7
+        System.out.println(iterator.hasNext()); // true
+        System.out.println(iterator.next());    // 9
+        System.out.println(iterator.hasNext()); // true
+        System.out.println(iterator.next());    // 15
+        System.out.println(iterator.hasNext()); // true
+        System.out.println(iterator.next());    // 20
+        System.out.println(iterator.hasNext()); // false
+    }
+}
