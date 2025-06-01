@@ -1,0 +1,52 @@
+import java.util.*;
+
+public class CourseSchedule {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Step 1: Build the graph and in-degree array
+        List<List<Integer>> graph = new ArrayList<>();
+        int[] inDegree = new int[numCourses];
+
+        for (int i = 0; i < numCourses; i++)
+            graph.add(new ArrayList<>());
+
+        for (int[] pre : prerequisites) {
+            int course = pre[0], prereq = pre[1];
+            graph.get(prereq).add(course);
+            inDegree[course]++;
+        }
+
+        // Step 2: Initialize queue with courses that have no prerequisites
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++)
+            if (inDegree[i] == 0)
+                queue.offer(i);
+
+        // Step 3: Process the queue
+        int completedCourses = 0;
+        while (!queue.isEmpty()) {
+            int curr = queue.poll();
+            completedCourses++;
+
+            for (int neighbor : graph.get(curr)) {
+                inDegree[neighbor]--;
+                if (inDegree[neighbor] == 0)
+                    queue.offer(neighbor);
+            }
+        }
+
+        // Step 4: If all courses are completed, return true
+        return completedCourses == numCourses;
+    }
+
+    // Example usage
+    public static void main(String[] args) {
+        CourseSchedule cs = new CourseSchedule();
+
+        int[][] pre1 = {{1, 0}};
+        System.out.println(cs.canFinish(2, pre1)); // true
+
+        int[][] pre2 = {{1, 0}, {0, 1}};
+        System.out.println(cs.canFinish(2, pre2)); // false
+    }
+}
