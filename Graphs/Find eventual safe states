@@ -1,0 +1,67 @@
+import java.util.*;
+
+public class SafeNodesInGraph {
+
+    public List<Integer> eventualSafeNodes(int[][] graph) {
+        int n = graph.length;
+        List<List<Integer>> reverseGraph = new ArrayList<>();
+        int[] outDegree = new int[n];
+
+        // Step 1: Initialize reverse graph
+        for (int i = 0; i < n; i++) {
+            reverseGraph.add(new ArrayList<>());
+        }
+
+        // Step 2: Build reverse graph and count out-degrees
+        for (int u = 0; u < n; u++) {
+            for (int v : graph[u]) {
+                reverseGraph.get(v).add(u);  // reverse the edge
+            }
+            outDegree[u] = graph[u].length;
+        }
+
+        // Step 3: Queue for terminal nodes (out-degree == 0)
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (outDegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+
+        // Step 4: BFS - Reduce out-degree of parents in reverse graph
+        boolean[] safe = new boolean[n];
+
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            safe[node] = true;
+
+            for (int neighbor : reverseGraph.get(node)) {
+                outDegree[neighbor]--;
+                if (outDegree[neighbor] == 0) {
+                    queue.offer(neighbor);
+                }
+            }
+        }
+
+        // Step 5: Collect all safe nodes
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (safe[i]) {
+                result.add(i);
+            }
+        }
+
+        return result;
+    }
+
+    // Test
+    public static void main(String[] args) {
+        SafeNodesInGraph obj = new SafeNodesInGraph();
+
+        int[][] graph1 = {{1,2},{2,3},{5},{0},{5},{},{}};
+        System.out.println(obj.eventualSafeNodes(graph1)); // [2,4,5,6]
+
+        int[][] graph2 = {{1,2,3,4},{1,2},{3,4},{0,4},{}};
+        System.out.println(obj.eventualSafeNodes(graph2)); // [4]
+    }
+}
