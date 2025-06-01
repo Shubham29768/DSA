@@ -1,0 +1,94 @@
+import java.util.*;
+
+public class WordLadderII {
+
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        List<List<String>> results = new ArrayList<>();
+        Set<String> wordSet = new HashSet<>(wordList);
+        
+        if (!wordSet.contains(endWord)) return results;
+
+        // Map to store shortest paths (word -> list of previous words)
+        Map<String, List<String>> graph = new HashMap<>();
+        Map<String, Integer> distance = new HashMap<>();
+        
+        bfs(beginWord, endWord, wordSet, graph, distance);
+        
+        List<String> path = new ArrayList<>();
+        dfs(endWord, beginWord, graph, distance, path, results);
+        
+        return results;
+    }
+
+    private void bfs(String beginWord, String endWord, Set<String> wordSet,
+                     Map<String, List<String>> graph, Map<String, Integer> distance) {
+        Queue<String> queue = new LinkedList<>();
+        queue.offer(beginWord);
+        distance.put(beginWord, 0);
+
+        while (!queue.isEmpty()) {
+            String word = queue.poll();
+            int currDist = distance.get(word);
+
+            for (String neighbor : getNeighbors(word, wordSet)) {
+                graph.computeIfAbsent(neighbor, k -> new ArrayList<>()).add(word);
+                
+                if (!distance.containsKey(neighbor)) {
+                    distance.put(neighbor, currDist + 1);
+                    queue.offer(neighbor);
+                }
+            }
+        }
+    }
+
+    private void dfs(String word, String beginWord, Map<String, List<String>> graph,
+                     Map<String, Integer> distance, List<String> path, List<List<String>> results) {
+        path.add(word);
+
+        if (word.equals(beginWord)) {
+            List<String> result = new ArrayList<>(path);
+            Collections.reverse(result);
+            results.add(result);
+        } else {
+            if (graph.containsKey(word)) {
+                for (String prev : graph.get(word)) {
+                    if (distance.get(word) == distance.get(prev) + 1) {
+                        dfs(prev, beginWord, graph, distance, path, results);
+                    }
+                }
+            }
+        }
+
+        path.remove(path.size() - 1); // Backtrack
+    }
+
+    private List<String> getNeighbors(String word, Set<String> wordSet) {
+        List<String> neighbors = new ArrayList<>();
+
+        char[] chars = word.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            char original = chars[i];
+            for (char c = 'a'; c <= 'z'; c++) {
+                if (c == original) continue;
+                chars[i] = c;
+                String newWord = new String(chars);
+                if (wordSet.contains(newWord)) {
+                    neighbors.add(newWord);
+                }
+            }
+            chars[i] = original;
+        }
+
+        return neighbors;
+    }
+
+    // Example usage
+    public static void main(String[] args) {
+        WordLadderII solver = new WordLadderII();
+        List<String> wordList1 = Arrays.asList("hot","dot","dog","lot","log","cog");
+        System.out.println(solver.findLadders("hit", "cog", wordList1));
+        
+        List<String> wordList2 = Arrays.asList("hot","dot","dog","lot","log");
+        System.out.println(solver.findLadders("hit", "cog", wordList2));
+    }
+}
