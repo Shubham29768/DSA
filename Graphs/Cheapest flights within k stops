@@ -1,0 +1,34 @@
+import heapq
+from collections import defaultdict
+
+def findCheapestPrice(n, flights, src, dst, k):
+    # Build graph as adjacency list
+    graph = defaultdict(list)
+    for u, v, cost in flights:
+        graph[u].append((v, cost))
+    
+    # Min-heap: (total_cost, current_city, stops_used)
+    heap = [(0, src, 0)]
+    
+    # Track visited with minimum stops to avoid redundant work
+    visited = dict()
+
+    while heap:
+        cost, city, stops = heapq.heappop(heap)
+        
+        # If destination is reached
+        if city == dst:
+            return cost
+        
+        # If stops exceed limit, skip
+        if stops > k:
+            continue
+        
+        # Process neighbors
+        for neighbor, price in graph[city]:
+            new_cost = cost + price
+            if (neighbor not in visited) or (stops < visited[neighbor]):
+                visited[neighbor] = stops
+                heapq.heappush(heap, (new_cost, neighbor, stops + 1))
+
+    return -1
