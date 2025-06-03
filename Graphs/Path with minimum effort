@@ -1,0 +1,29 @@
+import heapq
+
+def minimumEffortPath(heights):
+    rows, cols = len(heights), len(heights[0])
+    # minEffort[r][c] stores the min effort to reach cell (r, c)
+    minEffort = [[float('inf')] * cols for _ in range(rows)]
+    minEffort[0][0] = 0
+
+    # Priority queue: (effort, row, col)
+    heap = [(0, 0, 0)]
+
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
+    while heap:
+        effort, r, c = heapq.heappop(heap)
+        if r == rows - 1 and c == cols - 1:
+            return effort
+
+        for dr, dc in directions:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < rows and 0 <= nc < cols:
+                # Calculate effort to move to (nr, nc)
+                current_effort = abs(heights[nr][nc] - heights[r][c])
+                max_effort = max(effort, current_effort)
+                if minEffort[nr][nc] > max_effort:
+                    minEffort[nr][nc] = max_effort
+                    heapq.heappush(heap, (max_effort, nr, nc))
+
+    return -1  # Should never happen
