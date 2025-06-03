@@ -1,0 +1,29 @@
+import heapq
+from collections import defaultdict
+
+def networkDelayTime(times, n, k):
+    # Build adjacency list
+    graph = defaultdict(list)
+    for u, v, w in times:
+        graph[u].append((v, w))
+    
+    # Min-heap: (time, node)
+    heap = [(0, k)]
+    
+    # Track shortest time to reach each node
+    shortest = {}
+    
+    while heap:
+        time, node = heapq.heappop(heap)
+        if node in shortest:
+            continue
+        shortest[node] = time
+        for neighbor, weight in graph[node]:
+            if neighbor not in shortest:
+                heapq.heappush(heap, (time + weight, neighbor))
+    
+    # If all nodes are reached, return the max time
+    if len(shortest) == n:
+        return max(shortest.values())
+    
+    return -1
