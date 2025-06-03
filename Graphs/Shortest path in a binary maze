@@ -1,0 +1,33 @@
+from collections import deque
+
+def shortestPathBinaryMatrix(grid):
+    n = len(grid)
+
+    # If start or end is blocked
+    if grid[0][0] != 0 or grid[n-1][n-1] != 0:
+        return -1
+
+    # 8 directions: vertical, horizontal, and diagonal
+    directions = [(-1, -1), (-1, 0), (-1, 1),
+                  (0, -1),          (0, 1),
+                  (1, -1),  (1, 0), (1, 1)]
+
+    queue = deque()
+    queue.append((0, 0, 1))  # (row, col, path_length)
+    visited = set()
+    visited.add((0, 0))
+
+    while queue:
+        row, col, path_len = queue.popleft()
+
+        # If we reach the bottom-right cell
+        if row == n - 1 and col == n - 1:
+            return path_len
+
+        for dr, dc in directions:
+            r, c = row + dr, col + dc
+            if 0 <= r < n and 0 <= c < n and grid[r][c] == 0 and (r, c) not in visited:
+                queue.append((r, c, path_len + 1))
+                visited.add((r, c))
+
+    return -1  # No path found
