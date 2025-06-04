@@ -1,0 +1,51 @@
+import java.util.*;
+
+public class NetworkConnections {
+
+    public int makeConnected(int n, int[][] connections) {
+        // If there are less than n - 1 connections, it's impossible to connect all computers
+        if (connections.length < n - 1) return -1;
+
+        // Union-Find initialization
+        int[] parent = new int[n];
+        for (int i = 0; i < n; i++) parent[i] = i;
+
+        // Count the number of connected components
+        int components = n;
+
+        for (int[] conn : connections) {
+            int u = find(parent, conn[0]);
+            int v = find(parent, conn[1]);
+
+            if (u != v) {
+                parent[u] = v;
+                components--;
+            }
+        }
+
+        // Number of operations needed is (components - 1)
+        return components - 1;
+    }
+
+    // Find with path compression
+    private int find(int[] parent, int i) {
+        if (parent[i] != i) {
+            parent[i] = find(parent, parent[i]);
+        }
+        return parent[i];
+    }
+
+    // Main method to test the code
+    public static void main(String[] args) {
+        NetworkConnections nc = new NetworkConnections();
+
+        int[][] connections1 = {{0, 1}, {0, 2}, {1, 2}};
+        System.out.println(nc.makeConnected(4, connections1)); // Output: 1
+
+        int[][] connections2 = {{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 3}};
+        System.out.println(nc.makeConnected(6, connections2)); // Output: 2
+
+        int[][] connections3 = {{0, 1}, {0, 2}, {0, 3}, {1, 2}};
+        System.out.println(nc.makeConnected(6, connections3)); // Output: -1
+    }
+}
