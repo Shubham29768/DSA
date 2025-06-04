@@ -1,0 +1,51 @@
+import java.util.*;
+
+public class MostStonesRemoved {
+
+    public int removeStones(int[][] stones) {
+        Map<Integer, Integer> parent = new HashMap<>();
+
+        // Union x and y for each stone
+        for (int[] stone : stones) {
+            int x = stone[0];
+            int y = ~stone[1]; // Use ~ to distinguish rows and columns
+            union(parent, x, y);
+        }
+
+        // Count unique roots (connected components)
+        Set<Integer> uniqueRoots = new HashSet<>();
+        for (int[] stone : stones) {
+            uniqueRoots.add(find(parent, stone[0]));
+        }
+
+        return stones.length - uniqueRoots.size(); // Max stones removed
+    }
+
+    private int find(Map<Integer, Integer> parent, int x) {
+        if (!parent.containsKey(x)) parent.put(x, x);
+        if (x != parent.get(x)) parent.put(x, find(parent, parent.get(x)));
+        return parent.get(x);
+    }
+
+    private void union(Map<Integer, Integer> parent, int x, int y) {
+        int rootX = find(parent, x);
+        int rootY = find(parent, y);
+        if (rootX != rootY) {
+            parent.put(rootX, rootY);
+        }
+    }
+
+    // Example usage
+    public static void main(String[] args) {
+        MostStonesRemoved solver = new MostStonesRemoved();
+
+        int[][] stones1 = {{0,0},{0,1},{1,0},{1,2},{2,1},{2,2}};
+        System.out.println(solver.removeStones(stones1)); // Output: 5
+
+        int[][] stones2 = {{0,0},{0,2},{1,1},{2,0},{2,2}};
+        System.out.println(solver.removeStones(stones2)); // Output: 3
+
+        int[][] stones3 = {{0,0}};
+        System.out.println(solver.removeStones(stones3)); // Output: 0
+    }
+}
