@@ -1,0 +1,77 @@
+import java.util.*;
+
+public class LargestIsland {
+
+    public int largestIsland(int[][] grid) {
+        int n = grid.length;
+        Map<Integer, Integer> islandArea = new HashMap<>();
+        int id = 2;  // Start from 2 to avoid 0 and 1
+
+        // Step 1: DFS to label islands and compute areas
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    int area = dfs(grid, i, j, id);
+                    islandArea.put(id, area);
+                    id++;
+                }
+            }
+        }
+
+        // Step 2: Try flipping every 0 and calculate potential max area
+        int maxArea = islandArea.values().stream().max(Integer::compare).orElse(0);
+        int[] dirs = {-1, 0, 1, 0, -1};
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 0) {
+                    Set<Integer> seen = new HashSet<>();
+                    int newArea = 1;
+
+                    for (int d = 0; d < 4; d++) {
+                        int x = i + dirs[d];
+                        int y = j + dirs[d + 1];
+
+                        if (x >= 0 && y >= 0 && x < n && y < n && grid[x][y] > 1) {
+                            int neighborId = grid[x][y];
+                            if (seen.add(neighborId)) {
+                                newArea += islandArea.get(neighborId);
+                            }
+                        }
+                    }
+
+                    maxArea = Math.max(maxArea, newArea);
+                }
+            }
+        }
+
+        return maxArea == 0 ? n * n : maxArea;
+    }
+
+    private int dfs(int[][] grid, int i, int j, int id) {
+        if (i < 0 || j < 0 || i >= grid.length || j >= grid.length || grid[i][j] != 1)
+            return 0;
+
+        grid[i][j] = id;
+        int area = 1;
+        area += dfs(grid, i + 1, j, id);
+        area += dfs(grid, i - 1, j, id);
+        area += dfs(grid, i, j + 1, id);
+        area += dfs(grid, i, j - 1, id);
+        return area;
+    }
+
+    // Main method for testing
+    public static void main(String[] args) {
+        LargestIsland solution = new LargestIsland();
+
+        int[][] grid1 = {{1, 0}, {0, 1}};
+        System.out.println(solution.largestIsland(grid1)); // Output: 3
+
+        int[][] grid2 = {{1, 1}, {1, 0}};
+        System.out.println(solution.largestIsland(grid2)); // Output: 4
+
+        int[][] grid3 = {{1, 1}, {1, 1}};
+        System.out.println(solution.largestIsland(grid3)); // Output: 4
+    }
+}
