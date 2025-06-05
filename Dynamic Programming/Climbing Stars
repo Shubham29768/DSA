@@ -1,0 +1,23 @@
+public class ClimbStairs {
+    public int climbStairs(int n) {
+        if (n <= 2) return n;
+        int oneStepBefore = 2; // ways to reach step 2
+        int twoStepsBefore = 1; // ways to reach step 1
+        int result = 0;
+
+        for (int i = 3; i <= n; i++) {
+            result = oneStepBefore + twoStepsBefore;
+            twoStepsBefore = oneStepBefore;
+            oneStepBefore = result;
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+        ClimbStairs cs = new ClimbStairs();
+        System.out.println(cs.climbStairs(2)); // Output: 2
+        System.out.println(cs.climbStairs(3)); // Output: 3
+        System.out.println(cs.climbStairs(5)); // Output: 8
+    }
+}
