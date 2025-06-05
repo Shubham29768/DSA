@@ -1,0 +1,35 @@
+public class PartitionEqualSubsetSum {
+
+    public boolean canPartition(int[] nums) {
+        int total = 0;
+        for (int num : nums) {
+            total += num;
+        }
+
+        // If total is odd, can't split into equal subsets
+        if (total % 2 != 0) return false;
+
+        int target = total / 2;
+        boolean[] dp = new boolean[target + 1];
+        dp[0] = true; // Base case
+
+        for (int num : nums) {
+            for (int i = target; i >= num; i--) {
+                dp[i] = dp[i] || dp[i - num];
+            }
+        }
+
+        return dp[target];
+    }
+
+    // Test the code
+    public static void main(String[] args) {
+        PartitionEqualSubsetSum solver = new PartitionEqualSubsetSum();
+
+        int[] nums1 = {1, 5, 11, 5};
+        int[] nums2 = {1, 2, 3, 5};
+
+        System.out.println(solver.canPartition(nums1)); // Output: true
+        System.out.println(solver.canPartition(nums2)); // Output: false
+    }
+}
