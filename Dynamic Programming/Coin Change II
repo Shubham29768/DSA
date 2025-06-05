@@ -1,0 +1,24 @@
+public class CoinChangeCombinations {
+
+    public int change(int amount, int[] coins) {
+        int[] dp = new int[amount + 1];
+        dp[0] = 1;  // base case
+
+        for (int coin : coins) {
+            for (int i = coin; i <= amount; i++) {
+                dp[i] += dp[i - coin];
+            }
+        }
+
+        return dp[amount];
+    }
+
+    // Test the code
+    public static void main(String[] args) {
+        CoinChangeCombinations solver = new CoinChangeCombinations();
+
+        System.out.println(solver.change(5, new int[]{1, 2, 5})); // Output: 4
+        System.out.println(solver.change(3, new int[]{2}));       // Output: 0
+        System.out.println(solver.change(10, new int[]{10}));     // Output: 1
+    }
+}
