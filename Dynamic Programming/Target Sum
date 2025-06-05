@@ -1,0 +1,32 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class TargetSum {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        return backtrack(nums, 0, 0, target, new HashMap<>());
+    }
+
+    private int backtrack(int[] nums, int i, int sum, int target, Map<String, Integer> memo) {
+        if (i == nums.length) {
+            return sum == target ? 1 : 0;
+        }
+
+        String key = i + "," + sum;
+        if (memo.containsKey(key)) return memo.get(key);
+
+        int add = backtrack(nums, i + 1, sum + nums[i], target, memo);
+        int subtract = backtrack(nums, i + 1, sum - nums[i], target, memo);
+
+        memo.put(key, add + subtract);
+        return memo.get(key);
+    }
+
+    // Test the code
+    public static void main(String[] args) {
+        TargetSum solver = new TargetSum();
+
+        System.out.println(solver.findTargetSumWays(new int[]{1, 1, 1, 1, 1}, 3)); // Output: 5
+        System.out.println(solver.findTargetSumWays(new int[]{1}, 1));             // Output: 1
+    }
+}
