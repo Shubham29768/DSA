@@ -1,0 +1,32 @@
+import java.util.Arrays;
+
+public class AssignCookies {
+
+    public int findContentChildren(int[] g, int[] s) {
+        Arrays.sort(g); // Sort greed factors
+        Arrays.sort(s); // Sort cookie sizes
+
+        int child = 0; // index for g
+        int cookie = 0; // index for s
+
+        while (child < g.length && cookie < s.length) {
+            if (s[cookie] >= g[child]) {
+                child++; // assign cookie to child
+            }
+            cookie++; // move to next cookie
+        }
+
+        return child; // number of content children
+    }
+
+    // Test the code
+    public static void main(String[] args) {
+        AssignCookies solver = new AssignCookies();
+
+        int[] g1 = {1, 2, 3}, s1 = {1, 1};
+        int[] g2 = {1, 2}, s2 = {1, 2, 3};
+
+        System.out.println(solver.findContentChildren(g1, s1)); // Output: 1
+        System.out.println(solver.findContentChildren(g2, s2)); // Output: 2
+    }
+}
