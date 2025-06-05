@@ -1,0 +1,88 @@
+import java.util.*;
+
+public class MinimumAbsDifferencePartition {
+
+    private List<Integer>[] leftSums;
+    private List<Integer>[] rightSums;
+    private int n;
+
+    public int minimumDifference(int[] nums) {
+        n = nums.length / 2;
+        leftSums = new ArrayList[n + 1];
+        rightSums = new ArrayList[n + 1];
+
+        for (int i = 0; i <= n; i++) {
+            leftSums[i] = new ArrayList<>();
+            rightSums[i] = new ArrayList<>();
+        }
+
+        // Split array into two halves
+        int[] left = Arrays.copyOfRange(nums, 0, n);
+        int[] right = Arrays.copyOfRange(nums, n, 2 * n);
+
+        // Generate subset sums by size
+        generateSubsetSums(left, leftSums);
+        generateSubsetSums(right, rightSums);
+
+        // Sort rightSums lists for binary search
+        for (int i = 0; i <= n; i++) {
+            Collections.sort(rightSums[i]);
+        }
+
+        int totalSum = 0;
+        for (int num : nums) totalSum += num;
+
+        int result = Integer.MAX_VALUE;
+
+        // For each k, find pairs with minimal difference
+        for (int k = 0; k <= n; k++) {
+            for (int leftSum : leftSums[k]) {
+                int target = (totalSum / 2) - leftSum;
+                int idx = Collections.binarySearch(rightSums[n - k], target);
+
+                if (idx < 0) {
+                    idx = -idx - 1;  // insertion point
+                }
+
+                // Check closest right sums
+                if (idx < rightSums[n - k].size()) {
+                    int rightSum = rightSums[n - k].get(idx);
+                    int cur = Math.abs(totalSum - 2 * (leftSum + rightSum));
+                    result = Math.min(result, cur);
+                }
+                if (idx > 0) {
+                    int rightSum = rightSums[n - k].get(idx - 1);
+                    int cur = Math.abs(totalSum - 2 * (leftSum + rightSum));
+                    result = Math.min(result, cur);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private void generateSubsetSums(int[] arr, List<Integer>[] sums) {
+        int length = arr.length;
+        int limit = 1 << length;
+
+        for (int mask = 0; mask < limit; mask++) {
+            int sum = 0, count = 0;
+            for (int i = 0; i < length; i++) {
+                if ((mask & (1 << i)) != 0) {
+                    sum += arr[i];
+                    count++;
+                }
+            }
+            sums[count].add(sum);
+        }
+    }
+
+    // Test code
+    public static void main(String[] args) {
+        MinimumAbsDifferencePartition solver = new MinimumAbsDifferencePartition();
+
+        System.out.println(solver.minimumDifference(new int[]{3, 9, 7, 3})); // Output: 2
+        System.out.println(solver.minimumDifference(new int[]{-36, 36})); // Output: 72
+        System.out.println(solver.minimumDifference(new int[]{2, -1, 0, 4, -2, -9})); // Output: 0
+    }
+}
