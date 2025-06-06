@@ -1,0 +1,64 @@
+public class BooleanExpressionEvaluator {
+
+    public boolean parseBoolExpr(String expression) {
+        // Base cases
+        if (expression.equals("t")) return true;
+        if (expression.equals("f")) return false;
+
+        char op = expression.charAt(0);
+        String subExpr = expression.substring(2, expression.length() - 1); // remove operator and outer parentheses
+
+        // Parse inner expressions
+        List<String> parts = splitExpressions(subExpr);
+
+        switch (op) {
+            case '!':
+                // Only one inner expression for NOT
+                return !parseBoolExpr(parts.get(0));
+
+            case '&':
+                // AND all inner expressions
+                for (String part : parts) {
+                    if (!parseBoolExpr(part)) return false;
+                }
+                return true;
+
+            case '|':
+                // OR all inner expressions
+                for (String part : parts) {
+                    if (parseBoolExpr(part)) return true;
+                }
+                return false;
+
+            default:
+                throw new IllegalArgumentException("Invalid operator");
+        }
+    }
+
+    // Helper to split by commas, accounting for nested parentheses
+    private List<String> splitExpressions(String s) {
+        List<String> result = new ArrayList<>();
+        int balance = 0;
+        int start = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '(') balance++;
+            else if (c == ')') balance--;
+            else if (c == ',' && balance == 0) {
+                result.add(s.substring(start, i));
+                start = i + 1;
+            }
+        }
+        // Add last expression
+        result.add(s.substring(start));
+        return result;
+    }
+
+    public static void main(String[] args) {
+        BooleanExpressionEvaluator evaluator = new BooleanExpressionEvaluator();
+
+        System.out.println(evaluator.parseBoolExpr("&(|(f))"));      // false
+        System.out.println(evaluator.parseBoolExpr("|(f,f,f,t)"));  // true
+        System.out.println(evaluator.parseBoolExpr("!(&(f,t))"));   // true
+    }
+}
