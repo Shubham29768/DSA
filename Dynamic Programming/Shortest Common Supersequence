@@ -1,0 +1,66 @@
+public class ShortestCommonSupersequence {
+    public String shortestCommonSupersequence(String str1, String str2) {
+        // Step 1: Find LCS
+        String lcs = findLCS(str1, str2);
+
+        // Step 2: Merge using LCS
+        StringBuilder result = new StringBuilder();
+        int i = 0, j = 0;
+
+        for (char c : lcs.toCharArray()) {
+            // Add characters from str1 before matching LCS character
+            while (i < str1.length() && str1.charAt(i) != c) {
+                result.append(str1.charAt(i++));
+            }
+            // Add characters from str2 before matching LCS character
+            while (j < str2.length() && str2.charAt(j) != c) {
+                result.append(str2.charAt(j++));
+            }
+            // Add the LCS character from either string
+            result.append(c);
+            i++;
+            j++;
+        }
+
+        // Add remaining characters
+        result.append(str1.substring(i));
+        result.append(str2.substring(j));
+
+        return result.toString();
+    }
+
+    // Helper: Compute Longest Common Subsequence (LCS)
+    private String findLCS(String s1, String s2) {
+        int m = s1.length(), n = s2.length();
+        String[][] dp = new String[m + 1][n + 1];
+
+        // Initialize with empty strings
+        for (int i = 0; i <= m; i++)
+            for (int j = 0; j <= n; j++)
+                dp[i][j] = "";
+
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + s1.charAt(i - 1);
+                } else {
+                    dp[i][j] = dp[i - 1][j].length() > dp[i][j - 1].length() ?
+                               dp[i - 1][j] : dp[i][j - 1];
+                }
+            }
+        }
+
+        return dp[m][n];
+    }
+
+    // Example usage
+    public static void main(String[] args) {
+        ShortestCommonSupersequence scs = new ShortestCommonSupersequence();
+
+        String str1 = "abac", str2 = "cab";
+        System.out.println("SCS: " + scs.shortestCommonSupersequence(str1, str2)); // Output: "cabac"
+
+        str1 = "aaaaaaaa"; str2 = "aaaaaaaa";
+        System.out.println("SCS: " + scs.shortestCommonSupersequence(str1, str2)); // Output: "aaaaaaaa"
+    }
+}
