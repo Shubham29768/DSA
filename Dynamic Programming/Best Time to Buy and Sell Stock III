@@ -1,0 +1,30 @@
+public class MaxProfitTwoTransactions {
+    public int maxProfit(int[] prices) {
+        int buy1 = Integer.MIN_VALUE;
+        int sell1 = 0;
+        int buy2 = Integer.MIN_VALUE;
+        int sell2 = 0;
+
+        for (int price : prices) {
+            buy1 = Math.max(buy1, -price);           // First buy
+            sell1 = Math.max(sell1, buy1 + price);   // First sell
+            buy2 = Math.max(buy2, sell1 - price);    // Second buy (after first sell)
+            sell2 = Math.max(sell2, buy2 + price);   // Second sell
+        }
+
+        return sell2;
+    }
+
+    public static void main(String[] args) {
+        MaxProfitTwoTransactions solver = new MaxProfitTwoTransactions();
+
+        int[] prices1 = {3,3,5,0,0,3,1,4};
+        System.out.println("Max Profit: " + solver.maxProfit(prices1)); // Output: 6
+
+        int[] prices2 = {1,2,3,4,5};
+        System.out.println("Max Profit: " + solver.maxProfit(prices2)); // Output: 4
+
+        int[] prices3 = {7,6,4,3,1};
+        System.out.println("Max Profit: " + solver.maxProfit(prices3)); // Output: 0
+    }
+}
