@@ -1,0 +1,31 @@
+public class BurstBalloons {
+    public int maxCoins(int[] nums) {
+        int n = nums.length;
+        int[] arr = new int[n + 2];
+        arr[0] = 1;
+        arr[n + 1] = 1;
+        System.arraycopy(nums, 0, arr, 1, n);
+
+        int[][] dp = new int[n + 2][n + 2];
+
+        // length is the gap between i and j
+        for (int length = 2; length <= n + 1; length++) {
+            for (int i = 0; i + length <= n + 1; i++) {
+                int j = i + length;
+                for (int k = i + 1; k < j; k++) {
+                    int coins = arr[i] * arr[k] * arr[j] + dp[i][k] + dp[k][j];
+                    dp[i][j] = Math.max(dp[i][j], coins);
+                }
+            }
+        }
+
+        return dp[0][n + 1];
+    }
+
+    public static void main(String[] args) {
+        BurstBalloons solver = new BurstBalloons();
+
+        System.out.println(solver.maxCoins(new int[]{3,1,5,8}));  // Output: 167
+        System.out.println(solver.maxCoins(new int[]{1,5}));      // Output: 10
+    }
+}
