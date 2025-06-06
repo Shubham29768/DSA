@@ -1,0 +1,29 @@
+public class StockWithCooldown {
+    public int maxProfit(int[] prices) {
+        if (prices == null || prices.length == 0) return 0;
+        int n = prices.length;
+
+        int hold = -prices[0];  // holding stock after day 0
+        int sold = 0;           // just sold stock
+        int rest = 0;           // cooldown/rest
+
+        for (int i = 1; i < n; i++) {
+            int prevHold = hold;
+            int prevSold = sold;
+            int prevRest = rest;
+
+            hold = Math.max(prevHold, prevRest - prices[i]);  // buy or hold
+            sold = prevHold + prices[i];                       // sell stock
+            rest = Math.max(prevRest, prevSold);               // cooldown or rest
+        }
+
+        return Math.max(sold, rest); // max profit when not holding stock
+    }
+
+    public static void main(String[] args) {
+        StockWithCooldown solver = new StockWithCooldown();
+
+        System.out.println(solver.maxProfit(new int[]{1,2,3,0,2})); // Output: 3
+        System.out.println(solver.maxProfit(new int[]{1}));         // Output: 0
+    }
+}
