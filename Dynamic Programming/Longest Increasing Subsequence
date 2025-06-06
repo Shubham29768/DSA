@@ -1,0 +1,29 @@
+public class LongestIncreasingSubsequence {
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        if (n == 0) return 0;
+
+        int[] dp = new int[n];
+        int maxLen = 1;
+
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1; // minimum length is 1 (the number itself)
+            for (int j = 0; j < i; j++) {
+                if (nums[j] < nums[i]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            maxLen = Math.max(maxLen, dp[i]);
+        }
+
+        return maxLen;
+    }
+
+    public static void main(String[] args) {
+        LongestIncreasingSubsequence solver = new LongestIncreasingSubsequence();
+
+        System.out.println(solver.lengthOfLIS(new int[]{10,9,2,5,3,7,101,18})); // Output: 4
+        System.out.println(solver.lengthOfLIS(new int[]{0,1,0,3,2,3}));         // Output: 4
+        System.out.println(solver.lengthOfLIS(new int[]{7,7,7,7,7,7,7}));       // Output: 1
+    }
+}
