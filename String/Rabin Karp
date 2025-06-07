@@ -1,0 +1,27 @@
+public class MinimumRepeats {
+    public int repeatedStringMatch(String a, String b) {
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+
+        while (sb.length() < b.length()) {
+            sb.append(a);
+            count++;
+        }
+
+        // Check if b is now a substring
+        if (sb.toString().contains(b)) return count;
+
+        // Try appending one more time in case b spans the boundary
+        sb.append(a);
+        if (sb.toString().contains(b)) return count + 1;
+
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        MinimumRepeats solution = new MinimumRepeats();
+        System.out.println(solution.repeatedStringMatch("abcd", "cdabcdab")); // Output: 3
+        System.out.println(solution.repeatedStringMatch("a", "aa"));          // Output: 2
+        System.out.println(solution.repeatedStringMatch("abc", "xyz"));       // Output: -1
+    }
+}
