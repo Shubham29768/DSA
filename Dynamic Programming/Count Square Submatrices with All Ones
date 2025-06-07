@@ -1,0 +1,45 @@
+public class CountSquareSubmatrices {
+
+    public int countSquares(int[][] matrix) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        int totalSquares = 0;
+
+        // DP matrix can be in-place updated in original matrix
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (matrix[i][j] == 1) {
+                    // For cells not on the first row/column
+                    if (i > 0 && j > 0) {
+                        matrix[i][j] = 1 + Math.min(
+                            Math.min(matrix[i - 1][j], matrix[i][j - 1]),
+                            matrix[i - 1][j - 1]
+                        );
+                    }
+                    totalSquares += matrix[i][j];
+                }
+            }
+        }
+
+        return totalSquares;
+    }
+
+    // Test
+    public static void main(String[] args) {
+        CountSquareSubmatrices solver = new CountSquareSubmatrices();
+
+        int[][] matrix1 = {
+            {0, 1, 1, 1},
+            {1, 1, 1, 1},
+            {0, 1, 1, 1}
+        };
+        System.out.println("Total squares: " + solver.countSquares(matrix1)); // Output: 15
+
+        int[][] matrix2 = {
+            {1, 0, 1},
+            {1, 1, 0},
+            {1, 1, 0}
+        };
+        System.out.println("Total squares: " + solver.countSquares(matrix2)); // Output: 7
+    }
+}
