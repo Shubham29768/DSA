@@ -1,0 +1,66 @@
+class Trie {
+
+    // Trie Node class
+    private class TrieNode {
+        TrieNode[] children;
+        boolean isEndOfWord;
+
+        TrieNode() {
+            children = new TrieNode[26]; // for 'a' to 'z'
+            isEndOfWord = false;
+        }
+    }
+
+    private final TrieNode root;
+
+    // Constructor
+    public Trie() {
+        root = new TrieNode();
+    }
+
+    // Insert word into the Trie
+    public void insert(String word) {
+        TrieNode node = root;
+        for (char ch : word.toCharArray()) {
+            int index = ch - 'a';
+            if (node.children[index] == null)
+                node.children[index] = new TrieNode();
+            node = node.children[index];
+        }
+        node.isEndOfWord = true;
+    }
+
+    // Search for full word
+    public boolean search(String word) {
+        TrieNode node = searchPrefix(word);
+        return node != null && node.isEndOfWord;
+    }
+
+    // Search for prefix only
+    public boolean startsWith(String prefix) {
+        return searchPrefix(prefix) != null;
+    }
+
+    // Helper function to traverse the Trie
+    private TrieNode searchPrefix(String word) {
+        TrieNode node = root;
+        for (char ch : word.toCharArray()) {
+            int index = ch - 'a';
+            if (node.children[index] == null)
+                return null;
+            node = node.children[index];
+        }
+        return node;
+    }
+
+    // Test
+    public static void main(String[] args) {
+        Trie trie = new Trie();
+        trie.insert("apple");
+        System.out.println(trie.search("apple"));   // true
+        System.out.println(trie.search("app"));     // false
+        System.out.println(trie.startsWith("app")); // true
+        trie.insert("app");
+        System.out.println(trie.search("app"));     // true
+    }
+}
