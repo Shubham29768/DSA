@@ -1,0 +1,87 @@
+import java.util.*;
+
+public class MaximumXORWithLimit {
+
+    static class TrieNode {
+        TrieNode[] children = new TrieNode[2];
+    }
+
+    private TrieNode root = new TrieNode();
+
+    private void insert(int num) {
+        TrieNode node = root;
+        for (int i = 31; i >= 0; i--) {
+            int bit = (num >> i) & 1;
+            if (node.children[bit] == null)
+                node.children[bit] = new TrieNode();
+            node = node.children[bit];
+        }
+    }
+
+    private int maxXOR(int num) {
+        TrieNode node = root;
+        int result = 0;
+        for (int i = 31; i >= 0; i--) {
+            int bit = (num >> i) & 1;
+            int toggle = 1 - bit;
+            if (node.children[toggle] != null) {
+                result |= (1 << i);
+                node = node.children[toggle];
+            } else if (node.children[bit] != null) {
+                node = node.children[bit];
+            } else {
+                return -1; // No valid path
+            }
+        }
+        return result;
+    }
+
+    public int[] maximizeXor(int[] nums, int[][] queries) {
+        Arrays.sort(nums);
+
+        // Store queries with original indices
+        int[][] extendedQueries = new int[queries.length][3];
+        for (int i = 0; i < queries.length; i++) {
+            extendedQueries[i][0] = queries[i][0]; // xi
+            extendedQueries[i][1] = queries[i][1]; // mi
+            extendedQueries[i][2] = i;             // original index
+        }
+
+        // Sort queries by mi
+        Arrays.sort(extendedQueries, Comparator.comparingInt(a -> a[1]));
+
+        int[] result = new int[queries.length];
+        int index = 0;
+
+        for (int[] q : extendedQueries) {
+            int xi = q[0], mi = q[1], originalIndex = q[2];
+
+            // Insert nums into trie while nums[i] <= mi
+            while (index < nums.length && nums[index] <= mi) {
+                insert(nums[index]);
+                index++;
+            }
+
+            if (index == 0) {
+                result[originalIndex] = -1; // no elements ≤ mi
+            } else {
+                result[originalIndex] = maxXOR(xi);
+            }
+        }
+
+        return result;
+    }
+
+    // Test
+    public static void main(String[] args) {
+        MaximumXORWithLimit solver = new MaximumXORWithLimit();
+
+        int[] nums1 = {0,1,2,3,4};
+        int[][] queries1 = {{3,1},{1,3},{5,6}};
+        System.out.println(Arrays.toString(solver.maximizeXor(nums1, queries1))); // [3, 3, 7]
+
+        int[] nums2 = {5,2,4,6,6,3};
+        int[][] queries2 = {{12,4},{8,1},{6,3}};
+        System.out.println(Arrays.toString(solver.maximizeXor(nums2, queries2))); // [15, -1, 5]
+    }
+}
