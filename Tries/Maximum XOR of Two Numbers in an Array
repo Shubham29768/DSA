@@ -1,0 +1,68 @@
+import java.util.*;
+
+public class MaximumXOR {
+
+    // Trie Node class
+    static class TrieNode {
+        TrieNode[] children = new TrieNode[2]; // 0 and 1
+    }
+
+    private TrieNode root = new TrieNode();
+
+    // Insert number into the Trie
+    private void insert(int num) {
+        TrieNode node = root;
+        for (int i = 31; i >= 0; i--) {
+            int bit = (num >> i) & 1;
+            if (node.children[bit] == null)
+                node.children[bit] = new TrieNode();
+            node = node.children[bit];
+        }
+    }
+
+    // Find max XOR for given number using the Trie
+    private int findMaxXOR(int num) {
+        TrieNode node = root;
+        int maxXOR = 0;
+
+        for (int i = 31; i >= 0; i--) {
+            int bit = (num >> i) & 1;
+            // we want to take the opposite bit to maximize XOR
+            int toggleBit = 1 - bit;
+            if (node.children[toggleBit] != null) {
+                maxXOR |= (1 << i);
+                node = node.children[toggleBit];
+            } else {
+                node = node.children[bit];
+            }
+        }
+
+        return maxXOR;
+    }
+
+    // Main function to find max XOR in the array
+    public int findMaximumXOR(int[] nums) {
+        int max = 0;
+
+        // Build Trie with all numbers
+        for (int num : nums)
+            insert(num);
+
+        // Compute max XOR with each number
+        for (int num : nums)
+            max = Math.max(max, findMaxXOR(num));
+
+        return max;
+    }
+
+    // Test
+    public static void main(String[] args) {
+        MaximumXOR solver = new MaximumXOR();
+
+        int[] nums1 = {3, 10, 5, 25, 2, 8};
+        System.out.println(solver.findMaximumXOR(nums1)); // Output: 28
+
+        int[] nums2 = {14, 70, 53, 83, 49, 91, 36, 80, 92, 51, 66, 70};
+        System.out.println(solver.findMaximumXOR(nums2)); // Output: 127
+    }
+}
