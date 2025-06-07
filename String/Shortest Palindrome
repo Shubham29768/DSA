@@ -1,0 +1,45 @@
+public class Solution {
+    public String shortestPalindrome(String s) {
+        if (s == null || s.length() == 0) return s;
+
+        String rev = new StringBuilder(s).reverse().toString();
+        String combined = s + "#" + rev;
+
+        // Compute prefix table for KMP algorithm
+        int[] lps = computeLPS(combined);
+
+        // The last value of lps tells us the longest palindrome prefix length
+        int maxPalPrefix = lps[lps.length - 1];
+
+        // Add the remaining suffix of reversed string in front of s
+        String suffix = rev.substring(0, s.length() - maxPalPrefix);
+        return suffix + s;
+    }
+
+    private int[] computeLPS(String str) {
+        int[] lps = new int[str.length()];
+        int j = 0; // length of the previous longest prefix suffix
+
+        for (int i = 1; i < str.length(); ) {
+            if (str.charAt(i) == str.charAt(j)) {
+                j++;
+                lps[i] = j;
+                i++;
+            } else {
+                if (j != 0) {
+                    j = lps[j - 1];
+                } else {
+                    lps[i] = 0;
+                    i++;
+                }
+            }
+        }
+        return lps;
+    }
+
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.shortestPalindrome("aacecaaa")); // Output: "aaacecaaa"
+        System.out.println(sol.shortestPalindrome("abcd"));     // Output: "dcbabcd"
+    }
+}
