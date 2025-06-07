@@ -1,0 +1,26 @@
+public class MinAddToMakeValid {
+    public int minAddToMakeValid(String s) {
+        int open = 0;       // unmatched '('
+        int insertions = 0; // needed '(' to match ')'
+
+        for (char c : s.toCharArray()) {
+            if (c == '(') {
+                open++;
+            } else {
+                if (open > 0) {
+                    open--;  // matched with '('
+                } else {
+                    insertions++;  // no '(' to match
+                }
+            }
+        }
+
+        return open + insertions;
+    }
+
+    public static void main(String[] args) {
+        MinAddToMakeValid sol = new MinAddToMakeValid();
+        System.out.println(sol.minAddToMakeValid("())"));   // Output: 1
+        System.out.println(sol.minAddToMakeValid("((("));   // Output: 3
+    }
+}
