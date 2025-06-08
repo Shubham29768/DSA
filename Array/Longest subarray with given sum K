@@ -1,0 +1,42 @@
+import java.util.HashMap;
+
+public class LongestSubarraySumK {
+    public static int longestSubarrayWithSumK(int[] nums, int k) {
+        // HashMap to store (cumulative_sum -> earliest_index)
+        HashMap<Integer, Integer> prefixSumMap = new HashMap<>();
+        int sum = 0;
+        int maxLen = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+
+            // Case 1: If entire sub-array from index 0 to i has sum k
+            if (sum == k) {
+                maxLen = i + 1;
+            }
+
+            // Case 2: If (sum - k) is found in map, update maxLen
+            if (prefixSumMap.containsKey(sum - k)) {
+                maxLen = Math.max(maxLen, i - prefixSumMap.get(sum - k));
+            }
+
+            // Store the earliest index only
+            if (!prefixSumMap.containsKey(sum)) {
+                prefixSumMap.put(sum, i);
+            }
+        }
+
+        return maxLen;
+    }
+
+    // Main method to test the function
+    public static void main(String[] args) {
+        int[] nums1 = {10, 5, 2, 7, 1, 9};
+        int k1 = 15;
+        System.out.println("Output: " + longestSubarrayWithSumK(nums1, k1));  // Output: 4
+
+        int[] nums2 = {-3, 2, 1};
+        int k2 = 6;
+        System.out.println("Output: " + longestSubarrayWithSumK(nums2, k2));  // Output: 0
+    }
+}
