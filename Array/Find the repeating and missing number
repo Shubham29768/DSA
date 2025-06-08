@@ -1,0 +1,31 @@
+import java.util.*;
+
+public class FindDuplicateAndMissing {
+    public static int[] findErrorNums(int[] nums) {
+        int n = nums.length;
+        int actualSum = 0;
+        int expectedSum = n * (n + 1) / 2;
+        Set<Integer> seen = new HashSet<>();
+        int duplicate = -1;
+
+        for (int num : nums) {
+            actualSum += num;
+            if (seen.contains(num)) {
+                duplicate = num;
+            } else {
+                seen.add(num);
+            }
+        }
+
+        int missing = expectedSum - (actualSum - duplicate);
+        return new int[]{duplicate, missing};
+    }
+
+    public static void main(String[] args) {
+        int[] nums1 = {3, 5, 4, 1, 1};
+        System.out.println("Output: " + Arrays.toString(findErrorNums(nums1))); // [1, 2]
+
+        int[] nums2 = {1, 2, 3, 6, 7, 5, 7};
+        System.out.println("Output: " + Arrays.toString(findErrorNums(nums2))); // [7, 4]
+    }
+}
