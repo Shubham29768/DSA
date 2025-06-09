@@ -1,0 +1,39 @@
+public class RotationCount {
+
+    public static int countRotations(int[] nums) {
+        int low = 0, high = nums.length - 1;
+
+        while (low <= high) {
+            // If the subarray is already sorted
+            if (nums[low] <= nums[high]) {
+                return low;
+            }
+
+            int mid = low + (high - low) / 2;
+            int prev = (mid - 1 + nums.length) % nums.length;
+            int next = (mid + 1) % nums.length;
+
+            // Check if mid is the smallest element (pivot)
+            if (nums[mid] <= nums[prev] && nums[mid] <= nums[next]) {
+                return mid;
+            }
+
+            // Decide which half to search
+            if (nums[mid] >= nums[low]) {
+                low = mid + 1; // Go right
+            } else {
+                high = mid - 1; // Go left
+            }
+        }
+
+        return 0; // If no rotation
+    }
+
+    public static void main(String[] args) {
+        int[] nums1 = {4, 5, 6, 7, 0, 1, 2, 3};
+        int[] nums2 = {3, 4, 5, 1, 2};
+
+        System.out.println(countRotations(nums1)); // Output: 4
+        System.out.println(countRotations(nums2)); // Output: 3
+    }
+}
