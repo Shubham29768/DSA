@@ -1,0 +1,29 @@
+public class LowerBound {
+
+    public static int lowerBound(int[] nums, int x) {
+        int low = 0;
+        int high = nums.length;
+        
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            
+            if (nums[mid] < x) {
+                low = mid + 1;
+            } else {
+                high = mid;
+            }
+        }
+        
+        return low; // or nums.length if not found
+    }
+
+    public static void main(String[] args) {
+        int[] nums1 = {1, 2, 2, 3};
+        int x1 = 2;
+        System.out.println("Lower bound index: " + lowerBound(nums1, x1)); // Output: 1
+
+        int[] nums2 = {3, 5, 8, 15, 19};
+        int x2 = 9;
+        System.out.println("Lower bound index: " + lowerBound(nums2, x2)); // Output: 3
+    }
+}
