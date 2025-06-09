@@ -1,0 +1,50 @@
+public class FloorCeilFinder {
+
+    public static int findFloor(int[] nums, int x) {
+        int low = 0, high = nums.length - 1;
+        int floor = -1;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+
+            if (nums[mid] == x) {
+                return nums[mid]; // Exact match is both floor and ceil
+            } else if (nums[mid] < x) {
+                floor = nums[mid];
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return floor;
+    }
+
+    public static int findCeil(int[] nums, int x) {
+        int low = 0, high = nums.length - 1;
+        int ceil = -1;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+
+            if (nums[mid] == x) {
+                return nums[mid]; // Exact match is both floor and ceil
+            } else if (nums[mid] > x) {
+                ceil = nums[mid];
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return ceil;
+    }
+
+    public static void main(String[] args) {
+        int[] nums = {3, 4, 4, 7, 8, 10};
+        int x = 5;
+
+        int floor = findFloor(nums, x);
+        int ceil = findCeil(nums, x);
+
+        System.out.println(floor + " " + ceil);
+    }
+}
