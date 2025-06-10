@@ -1,0 +1,65 @@
+public class BookAllocation {
+
+    public static int allocateBooks(int[] nums, int m) {
+        int n = nums.length;
+        if (m > n) return -1; // More students than books = not possible
+
+        int low = getMax(nums);        // Minimum pages = max of one book
+        int high = getSum(nums);       // Maximum pages = all books to one student
+        int result = -1;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+
+            if (canAllocate(nums, m, mid)) {
+                result = mid;       // Try to minimize
+                high = mid - 1;
+            } else {
+                low = mid + 1;      // Try larger mid
+            }
+        }
+
+        return result;
+    }
+
+    // Helper to check if allocation is possible with maxPages limit
+    private static boolean canAllocate(int[] nums, int m, int maxPages) {
+        int studentCount = 1;
+        int pages = 0;
+
+        for (int book : nums) {
+            if (pages + book <= maxPages) {
+                pages += book;
+            } else {
+                studentCount++;
+                pages = book;
+
+                if (studentCount > m) return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static int getMax(int[] nums) {
+        int max = Integer.MIN_VALUE;
+        for (int num : nums) max = Math.max(max, num);
+        return max;
+    }
+
+    private static int getSum(int[] nums) {
+        int sum = 0;
+        for (int num : nums) sum += num;
+        return sum;
+    }
+
+    public static void main(String[] args) {
+        int[] books1 = {12, 34, 67, 90};
+        int m1 = 2;
+        System.out.println(allocateBooks(books1, m1)); // Output: 113
+
+        int[] books2 = {25, 46, 28, 49, 24};
+        int m2 = 4;
+        System.out.println(allocateBooks(books2, m2)); // Output: 71
+    }
+}
