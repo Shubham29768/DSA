@@ -1,0 +1,34 @@
+public class RowWithMaxOnes {
+
+    public static int rowWithMaxOnes(int[][] mat) {
+        int rows = mat.length;
+        int cols = mat[0].length;
+        int maxRowIndex = -1;
+        int j = cols - 1;
+
+        // Traverse from top-right to bottom-left
+        for (int i = 0; i < rows; i++) {
+            while (j >= 0 && mat[i][j] == 1) {
+                maxRowIndex = i;
+                j--; // move left to find more 1s in this row
+            }
+        }
+
+        return maxRowIndex;
+    }
+
+    public static void main(String[] args) {
+        int[][] mat1 = {
+            {1, 1, 1},
+            {0, 0, 1},
+            {0, 0, 0}
+        };
+        System.out.println(rowWithMaxOnes(mat1)); // Output: 0
+
+        int[][] mat2 = {
+            {0, 0},
+            {0, 0}
+        };
+        System.out.println(rowWithMaxOnes(mat2)); // Output: -1
+    }
+}
