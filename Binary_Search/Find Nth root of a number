@@ -1,0 +1,39 @@
+public class NthRootFinder {
+
+    public static int nthRoot(int N, int M) {
+        int low = 1, high = M;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            long power = power(mid, N);
+
+            if (power == M) {
+                return mid; // Found exact N-th root
+            } else if (power < M) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+
+        return -1; // No integer N-th root exists
+    }
+
+    // Helper method to compute base^exp safely using long
+    public static long power(int base, int exp) {
+        long result = 1;
+        for (int i = 1; i <= exp; i++) {
+            result *= base;
+            if (result > Long.MAX_VALUE) break;
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        int N1 = 3, M1 = 27;
+        int N2 = 4, M2 = 69;
+
+        System.out.println(nthRoot(N1, M1)); // Output: 3
+        System.out.println(nthRoot(N2, M2)); // Output: -1
+    }
+}
