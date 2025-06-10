@@ -1,0 +1,32 @@
+public class SquareRootFinder {
+
+    public static int floorSqrt(int n) {
+        if (n == 0 || n == 1) {
+            return n;
+        }
+
+        int low = 1, high = n, ans = 0;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+
+            // To avoid overflow, compare using division
+            if (mid <= n / mid) {
+                ans = mid;       // mid might be the answer
+                low = mid + 1;   // look for a larger value
+            } else {
+                high = mid - 1;  // look for a smaller value
+            }
+        }
+
+        return ans;
+    }
+
+    public static void main(String[] args) {
+        int n1 = 36;
+        int n2 = 28;
+
+        System.out.println(floorSqrt(n1)); // Output: 6
+        System.out.println(floorSqrt(n2)); // Output: 5
+    }
+}
