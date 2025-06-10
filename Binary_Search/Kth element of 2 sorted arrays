@@ -1,0 +1,48 @@
+public class KthElementSortedArrays {
+
+    public static int findKthElement(int[] a, int[] b, int k) {
+        int m = a.length;
+        int n = b.length;
+
+        // Ensure a is the smaller array
+        if (m > n) {
+            return findKthElement(b, a, k);
+        }
+
+        int low = Math.max(0, k - n);
+        int high = Math.min(k, m);
+
+        while (low <= high) {
+            int cutA = (low + high) / 2;
+            int cutB = k - cutA;
+
+            int leftA = (cutA == 0) ? Integer.MIN_VALUE : a[cutA - 1];
+            int leftB = (cutB == 0) ? Integer.MIN_VALUE : b[cutB - 1];
+
+            int rightA = (cutA == m) ? Integer.MAX_VALUE : a[cutA];
+            int rightB = (cutB == n) ? Integer.MAX_VALUE : b[cutB];
+
+            if (leftA <= rightB && leftB <= rightA) {
+                return Math.max(leftA, leftB);
+            } else if (leftA > rightB) {
+                high = cutA - 1;
+            } else {
+                low = cutA + 1;
+            }
+        }
+
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        int[] a1 = {2, 3, 6, 7, 9};
+        int[] b1 = {1, 4, 8, 10};
+        int k1 = 5;
+        System.out.println(findKthElement(a1, b1, k1)); // Output: 6
+
+        int[] a2 = {100, 112, 256, 349, 770};
+        int[] b2 = {72, 86, 113, 119, 265, 445, 892};
+        int k2 = 7;
+        System.out.println(findKthElement(a2, b2, k2)); // Output: 256
+    }
+}
