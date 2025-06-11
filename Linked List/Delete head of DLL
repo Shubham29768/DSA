@@ -1,0 +1,55 @@
+// Definition for a doubly-linked list node
+class DoublyListNode {
+    int val;
+    DoublyListNode prev;
+    DoublyListNode next;
+
+    DoublyListNode(int val) {
+        this.val = val;
+    }
+}
+
+public class DoublyLinkedList {
+    
+    // Function to remove head and return new head
+    public static DoublyListNode removeHead(DoublyListNode head) {
+        if (head == null) return null;  // Empty list
+
+        DoublyListNode newHead = head.next;  // Move head to next node
+        if (newHead != null) {
+            newHead.prev = null;  // Disconnect previous pointer
+        }
+        return newHead;
+    }
+
+    // Utility to print the list
+    public static void printList(DoublyListNode head) {
+        DoublyListNode temp = head;
+        while (temp != null) {
+            System.out.print(temp.val);
+            if (temp.next != null) System.out.print(" <-> ");
+            temp = temp.next;
+        }
+        System.out.println();
+    }
+
+    // Test case
+    public static void main(String[] args) {
+        // Create doubly linked list: 1 <-> 2 <-> 3
+        DoublyListNode node1 = new DoublyListNode(1);
+        DoublyListNode node2 = new DoublyListNode(2);
+        DoublyListNode node3 = new DoublyListNode(3);
+        node1.next = node2;
+        node2.prev = node1;
+        node2.next = node3;
+        node3.prev = node2;
+
+        System.out.print("Original list: ");
+        printList(node1);
+
+        DoublyListNode newHead = removeHead(node1);
+
+        System.out.print("After removing head: ");
+        printList(newHead);
+    }
+}
