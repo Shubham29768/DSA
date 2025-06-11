@@ -1,0 +1,50 @@
+// Definition for singly-linked list.
+class ListNode {
+    int val;
+    ListNode next;
+
+    // Constructor
+    ListNode(int val) {
+        this.val = val;
+        this.next = null;
+    }
+}
+
+public class InsertAtHead {
+
+    // Function to insert a new node at the head
+    public static ListNode insertAtHead(ListNode head, int X) {
+        ListNode newNode = new ListNode(X); // create new node with value X
+        newNode.next = head; // point new node to current head
+        return newNode; // new node becomes the new head
+    }
+
+    // Function to print the linked list
+    public static void printList(ListNode head) {
+        while (head != null) {
+            System.out.print(head.val);
+            if (head.next != null) System.out.print(" -> ");
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    // Main method to test the insertion
+    public static void main(String[] args) {
+        // Example 1
+        ListNode head = new ListNode(1);
+        head.next = new ListNode(2);
+        head.next.next = new ListNode(3);
+        System.out.print("Original list: ");
+        printList(head);
+        head = insertAtHead(head, 7);
+        System.out.print("After insertion: ");
+        printList(head);
+
+        // Example 2 (Empty list)
+        ListNode head2 = null;
+        head2 = insertAtHead(head2, 7);
+        System.out.print("After insertion to empty list: ");
+        printList(head2);
+    }
+}
