@@ -1,0 +1,69 @@
+// Definition for doubly-linked list.
+class DoublyListNode {
+    int val;
+    DoublyListNode next;
+    DoublyListNode prev;
+
+    // Constructor
+    DoublyListNode(int val) {
+        this.val = val;
+        this.next = null;
+        this.prev = null;
+    }
+}
+
+public class InsertBeforeHead {
+
+    // Function to insert a new node before the head
+    public static DoublyListNode insertBeforeHead(DoublyListNode head, int X) {
+        DoublyListNode newNode = new DoublyListNode(X);
+
+        // Connect new node to the current head
+        newNode.next = head;
+
+        // If head is not null, update its prev
+        if (head != null) {
+            head.prev = newNode;
+        }
+
+        // Return new node as the new head
+        return newNode;
+    }
+
+    // Utility to print doubly linked list
+    public static void printList(DoublyListNode head) {
+        DoublyListNode temp = head;
+        while (temp != null) {
+            System.out.print(temp.val);
+            if (temp.next != null) System.out.print(" <-> ");
+            temp = temp.next;
+        }
+        System.out.println();
+    }
+
+    // Main function to test
+    public static void main(String[] args) {
+        // Example 1
+        DoublyListNode head = new DoublyListNode(1);
+        DoublyListNode node2 = new DoublyListNode(2);
+        DoublyListNode node3 = new DoublyListNode(3);
+        head.next = node2;
+        node2.prev = head;
+        node2.next = node3;
+        node3.prev = node2;
+
+        System.out.print("Original list: ");
+        printList(head);
+        head = insertBeforeHead(head, 3);
+        System.out.print("After insertion: ");
+        printList(head);
+
+        // Example 2 (Single node)
+        DoublyListNode head2 = new DoublyListNode(5);
+        System.out.print("Original list: ");
+        printList(head2);
+        head2 = insertBeforeHead(head2, 7);
+        System.out.print("After insertion: ");
+        printList(head2);
+    }
+}
