@@ -1,0 +1,32 @@
+import java.util.*;
+
+public class SubsetSums {
+
+    public static List<Integer> subsetSums(int[] nums) {
+        List<Integer> result = new ArrayList<>();
+        dfs(0, 0, nums, result);
+        return result;
+    }
+
+    private static void dfs(int index, int currentSum, int[] nums, List<Integer> result) {
+        if (index == nums.length) {
+            result.add(currentSum); // Add sum of this subset
+            return;
+        }
+
+        // Include current element
+        dfs(index + 1, currentSum + nums[index], nums, result);
+
+        // Exclude current element
+        dfs(index + 1, currentSum, nums, result);
+    }
+
+    // Main method to test the function
+    public static void main(String[] args) {
+        int[] nums1 = {2, 3};
+        System.out.println("Output: " + subsetSums(nums1)); // Output: [5, 2, 3, 0] (any order)
+
+        int[] nums2 = {5, 2, 1};
+        System.out.println("Output: " + subsetSums(nums2)); // Output: [8, 6, 7, 5, 3, 1, 2, 0] (any order)
+    }
+}
