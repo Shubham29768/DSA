@@ -1,0 +1,65 @@
+import java.util.*;
+
+public class RatInMaze {
+
+    public static List<String> findPaths(int[][] grid, int n) {
+        List<String> result = new ArrayList<>();
+        if (grid[0][0] == 0 || grid[n - 1][n - 1] == 0) return result;
+
+        boolean[][] visited = new boolean[n][n];
+        backtrack(grid, 0, 0, n, "", visited, result);
+        return result;
+    }
+
+    private static void backtrack(int[][] grid, int i, int j, int n, String path,
+                                  boolean[][] visited, List<String> result) {
+        // Base condition: reach bottom-right cell
+        if (i == n - 1 && j == n - 1) {
+            result.add(path);
+            return;
+        }
+
+        // Mark current cell as visited
+        visited[i][j] = true;
+
+        // Direction vectors: Down, Left, Right, Up
+        int[] dx = {1, 0, 0, -1};
+        int[] dy = {0, -1, 1, 0};
+        char[] dir = {'D', 'L', 'R', 'U'};
+
+        for (int d = 0; d < 4; d++) {
+            int ni = i + dx[d];
+            int nj = j + dy[d];
+
+            if (isSafe(grid, visited, ni, nj, n)) {
+                backtrack(grid, ni, nj, n, path + dir[d], visited, result);
+            }
+        }
+
+        // Backtrack
+        visited[i][j] = false;
+    }
+
+    private static boolean isSafe(int[][] grid, boolean[][] visited, int i, int j, int n) {
+        return (i >= 0 && i < n && j >= 0 && j < n &&
+                grid[i][j] == 1 && !visited[i][j]);
+    }
+
+    // Main method for testing
+    public static void main(String[] args) {
+        int[][] grid1 = {
+            {1, 0, 0, 0},
+            {1, 1, 0, 1},
+            {1, 1, 0, 0},
+            {0, 1, 1, 1}
+        };
+        System.out.println("Output: " + findPaths(grid1, 4)); // ["DDRDRR", "DRDDRR"]
+
+        int[][] grid2 = {
+            {1, 0},
+            {1, 0}
+        };
+        List<String> output2 = findPaths(grid2, 2);
+        System.out.println("Output: " + (output2.isEmpty() ? "-1" : output2));
+    }
+}
