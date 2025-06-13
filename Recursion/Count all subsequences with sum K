@@ -1,0 +1,39 @@
+import java.util.*;
+
+public class SubsequenceSumK {
+
+    public static int countSubsequences(int[] nums, int k) {
+        int n = nums.length;
+        // DP cache: dp[i][sum] stores number of ways to reach 'sum' using first i elements
+        Integer[][] dp = new Integer[n + 1][k + 1];
+        return countWays(nums, n, k, dp);
+    }
+
+    private static int countWays(int[] nums, int i, int sum, Integer[][] dp) {
+        if (sum == 0) return 1;         // Found valid subset
+        if (i == 0) return 0;           // No elements left
+        if (dp[i][sum] != null) return dp[i][sum];
+
+        // Exclude current element
+        int exclude = countWays(nums, i - 1, sum, dp);
+
+        // Include current element if it's <= sum
+        int include = 0;
+        if (nums[i - 1] <= sum) {
+            include = countWays(nums, i - 1, sum - nums[i - 1], dp);
+        }
+
+        return dp[i][sum] = include + exclude;
+    }
+
+    // Main method to test the function
+    public static void main(String[] args) {
+        int[] nums1 = {4, 9, 2, 5, 1};
+        int k1 = 10;
+        System.out.println("Output: " + countSubsequences(nums1, k1)); // Output: 2
+
+        int[] nums2 = {4, 2, 10, 5, 1, 3};
+        int k2 = 5;
+        System.out.println("Output: " + countSubsequences(nums2, k2)); // Output: 3
+    }
+}
