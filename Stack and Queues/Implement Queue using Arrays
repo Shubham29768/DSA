@@ -1,0 +1,65 @@
+public class Main {
+
+    static class ArrayQueue {
+        private int[] queue;
+        private int front;
+        private int rear;
+        private int size;
+        private static final int DEFAULT_CAPACITY = 1000;
+
+        public ArrayQueue() {
+            queue = new int[DEFAULT_CAPACITY];
+            front = 0;
+            rear = 0;
+            size = 0;
+        }
+
+        // Adds element x to the end of the queue
+        public void push(int x) {
+            if (size == queue.length) {
+                throw new RuntimeException("Queue Overflow");
+            }
+            queue[rear] = x;
+            rear = (rear + 1) % queue.length;
+            size++;
+        }
+
+        // Removes and returns the front element of the queue
+        public int pop() {
+            if (isEmpty()) {
+                throw new RuntimeException("Queue Underflow");
+            }
+            int val = queue[front];
+            front = (front + 1) % queue.length;
+            size--;
+            return val;
+        }
+
+        // Returns the front element without removing it
+        public int peek() {
+            if (isEmpty()) {
+                throw new RuntimeException("Queue is Empty");
+            }
+            return queue[front];
+        }
+
+        // Returns true if the queue is empty
+        public boolean isEmpty() {
+            return size == 0;
+        }
+    }
+
+    public static void main(String[] args) {
+        // Example 1
+        ArrayQueue queue = new ArrayQueue();
+        queue.push(5);
+        queue.push(10);
+        System.out.println(queue.peek());     // Output: 5
+        System.out.println(queue.pop());      // Output: 5
+        System.out.println(queue.isEmpty());  // Output: false
+
+        // Example 2
+        ArrayQueue queue2 = new ArrayQueue();
+        System.out.println(queue2.isEmpty()); // Output: true
+    }
+}
