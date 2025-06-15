@@ -1,0 +1,65 @@
+public class Main {
+
+    static class LinkedListStack {
+        // Node class to represent each stack element
+        private static class Node {
+            int data;
+            Node next;
+
+            Node(int data) {
+                this.data = data;
+                this.next = null;
+            }
+        }
+
+        private Node head; // Top of the stack
+
+        public LinkedListStack() {
+            head = null;
+        }
+
+        // Pushes element x onto the stack
+        public void push(int x) {
+            Node newNode = new Node(x);
+            newNode.next = head;
+            head = newNode;
+        }
+
+        // Removes and returns the top element of the stack
+        public int pop() {
+            if (isEmpty()) {
+                throw new RuntimeException("Stack Underflow");
+            }
+            int val = head.data;
+            head = head.next;
+            return val;
+        }
+
+        // Returns the top element without removing it
+        public int top() {
+            if (isEmpty()) {
+                throw new RuntimeException("Stack is Empty");
+            }
+            return head.data;
+        }
+
+        // Returns true if the stack is empty
+        public boolean isEmpty() {
+            return head == null;
+        }
+    }
+
+    public static void main(String[] args) {
+        // Example 1
+        LinkedListStack stack = new LinkedListStack();
+        stack.push(3);
+        stack.push(7);
+        System.out.println(stack.pop());     // Output: 7
+        System.out.println(stack.top());     // Output: 3
+        System.out.println(stack.isEmpty()); // Output: false
+
+        // Example 2
+        LinkedListStack stack2 = new LinkedListStack();
+        System.out.println(stack2.isEmpty()); // Output: true
+    }
+}
