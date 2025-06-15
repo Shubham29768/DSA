@@ -1,0 +1,56 @@
+public class Main {
+
+    static class ArrayStack {
+        private int[] stack;
+        private int top;
+        private static final int DEFAULT_CAPACITY = 1000;
+
+        public ArrayStack() {
+            stack = new int[DEFAULT_CAPACITY];
+            top = -1;
+        }
+
+        public void push(int x) {
+            if (top + 1 == stack.length) {
+                throw new RuntimeException("Stack Overflow");
+            }
+            stack[++top] = x;
+        }
+
+        public int pop() {
+            if (isEmpty()) {
+                throw new RuntimeException("Stack Underflow");
+            }
+            return stack[top--];
+        }
+
+        public int top() {
+            if (isEmpty()) {
+                throw new RuntimeException("Stack is Empty");
+            }
+            return stack[top];
+        }
+
+        public boolean isEmpty() {
+            return top == -1;
+        }
+    }
+
+    public static void main(String[] args) {
+        ArrayStack stack = new ArrayStack();
+
+        // Test 1
+        stack.push(5);
+        stack.push(10);
+        System.out.println(stack.top());     // Output: 10
+        System.out.println(stack.pop());     // Output: 10
+        System.out.println(stack.isEmpty()); // Output: false
+
+        // Test 2
+        ArrayStack stack2 = new ArrayStack();
+        System.out.println(stack2.isEmpty()); // Output: true
+        stack2.push(1);
+        System.out.println(stack2.pop());     // Output: 1
+        System.out.println(stack2.isEmpty()); // Output: true
+    }
+}
