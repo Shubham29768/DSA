@@ -1,0 +1,99 @@
+import java.util.*;
+
+public class MinHeap {
+    private List<Integer> heap;
+
+    public void initializeHeap() {
+        heap = new ArrayList<>();
+    }
+
+    public void insert(int x) {
+        heap.add(x);
+        siftUp(heap.size() - 1);
+    }
+
+    public int getMin() {
+        if (isEmpty()) throw new NoSuchElementException("Heap is empty");
+        return heap.get(0);
+    }
+
+    public void extractMin() {
+        if (isEmpty()) return;
+        int last = heap.size() - 1;
+        Collections.swap(heap, 0, last);
+        heap.remove(last);
+        siftDown(0);
+    }
+
+    public int heapSize() {
+        return heap.size();
+    }
+
+    public boolean isEmpty() {
+        return heap.isEmpty();
+    }
+
+    public void changeKey(int index, int value) {
+        if (index < 0 || index >= heap.size()) return;
+
+        int oldValue = heap.get(index);
+        heap.set(index, value);
+        if (value < oldValue) {
+            siftUp(index);
+        } else {
+            siftDown(index);
+        }
+    }
+
+    private void siftUp(int i) {
+        while (i > 0) {
+            int parent = (i - 1) / 2;
+            if (heap.get(parent) > heap.get(i)) {
+                Collections.swap(heap, parent, i);
+                i = parent;
+            } else {
+                break;
+            }
+        }
+    }
+
+    private void siftDown(int i) {
+        int size = heap.size();
+        while (i < size) {
+            int left = 2 * i + 1;
+            int right = 2 * i + 2;
+            int smallest = i;
+
+            if (left < size && heap.get(left) < heap.get(smallest)) {
+                smallest = left;
+            }
+            if (right < size && heap.get(right) < heap.get(smallest)) {
+                smallest = right;
+            }
+
+            if (smallest != i) {
+                Collections.swap(heap, i, smallest);
+                i = smallest;
+            } else {
+                break;
+            }
+        }
+    }
+
+    // Main to demonstrate usage
+    public static void main(String[] args) {
+        MinHeap heap = new MinHeap();
+
+        // Simulating input operations
+        heap.initializeHeap();                        // null
+        heap.insert(4);                               // null
+        heap.insert(1);                               // null
+        heap.insert(10);                              // null
+        System.out.println(heap.getMin());            // 1
+        System.out.println(heap.heapSize());          // 3
+        System.out.println(heap.isEmpty() ? 1 : 0);   // 0
+        heap.extractMin();                            // null
+        heap.changeKey(0, 16);                        // null
+        System.out.println(heap.getMin());            // 10
+    }
+}
