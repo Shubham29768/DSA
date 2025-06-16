@@ -1,0 +1,79 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class MinHeap {
+    private List<Integer> heap;
+
+    public void initializeHeap() {
+        heap = new ArrayList<>();
+    }
+
+    public void insert(int x) {
+        heap.add(x);
+        heapifyUp(heap.size() - 1);
+    }
+
+    public int getMin() {
+        if (heap.isEmpty()) return -1;
+        return heap.get(0);
+    }
+
+    public void extractMin() {
+        if (heap.isEmpty()) return;
+        int last = heap.size() - 1;
+        heap.set(0, heap.get(last));
+        heap.remove(last);
+        heapifyDown(0);
+    }
+
+    public int heapSize() {
+        return heap.size();
+    }
+
+    public int isEmpty() {
+        return heap.isEmpty() ? 1 : 0;
+    }
+
+    public void changeKey(int ind, int val) {
+        if (ind < 0 || ind >= heap.size()) return;
+        int oldVal = heap.get(ind);
+        heap.set(ind, val);
+        if (val < oldVal)
+            heapifyUp(ind);
+        else
+            heapifyDown(ind);
+    }
+
+    private void heapifyUp(int i) {
+        while (i > 0) {
+            int parent = (i - 1) / 2;
+            if (heap.get(i) < heap.get(parent)) {
+                swap(i, parent);
+                i = parent;
+            } else break;
+        }
+    }
+
+    private void heapifyDown(int i) {
+        int n = heap.size();
+        while (i < n) {
+            int left = 2 * i + 1;
+            int right = 2 * i + 2;
+            int smallest = i;
+
+            if (left < n && heap.get(left) < heap.get(smallest)) smallest = left;
+            if (right < n && heap.get(right) < heap.get(smallest)) smallest = right;
+
+            if (smallest != i) {
+                swap(i, smallest);
+                i = smallest;
+            } else break;
+        }
+    }
+
+    private void swap(int i, int j) {
+        int tmp = heap.get(i);
+        heap.set(i, heap.get(j));
+        heap.set(j, tmp);
+    }
+}
