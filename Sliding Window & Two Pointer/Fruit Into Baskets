@@ -1,0 +1,39 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class FruitIntoBaskets {
+    public int totalFruit(int[] fruits) {
+        Map<Integer, Integer> basket = new HashMap<>();
+        int maxFruits = 0;
+        int left = 0;
+
+        for (int right = 0; right < fruits.length; right++) {
+            // Add the current fruit to the basket
+            basket.put(fruits[right], basket.getOrDefault(fruits[right], 0) + 1);
+
+            // If we have more than 2 types of fruits, shrink the window from the left
+            while (basket.size() > 2) {
+                basket.put(fruits[left], basket.get(fruits[left]) - 1);
+                if (basket.get(fruits[left]) == 0) {
+                    basket.remove(fruits[left]);
+                }
+                left++;
+            }
+
+            // Update max fruits collected in current valid window
+            maxFruits = Math.max(maxFruits, right - left + 1);
+        }
+
+        return maxFruits;
+    }
+
+    public static void main(String[] args) {
+        FruitIntoBaskets solution = new FruitIntoBaskets();
+
+        int[] fruits1 = {1, 2, 1};
+        System.out.println("Output: " + solution.totalFruit(fruits1));  // Output: 3
+
+        int[] fruits2 = {1, 2, 3, 2, 2};
+        System.out.println("Output: " + solution.totalFruit(fruits2));  // Output: 4
+    }
+}
