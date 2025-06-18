@@ -1,0 +1,49 @@
+import java.util.Arrays;
+
+public class MinToMaxHeap {
+
+    // Main function to convert min-heap to max-heap
+    public static void convertToMaxHeap(int[] nums) {
+        int n = nums.length;
+
+        // Start from the last non-leaf node and apply maxHeapify
+        for (int i = (n / 2) - 1; i >= 0; i--) {
+            maxHeapify(nums, n, i);
+        }
+    }
+
+    // Max-heapify: fix the heap at index i
+    private static void maxHeapify(int[] arr, int n, int i) {
+        int largest = i;
+        int left = 2 * i + 1;  // left child
+        int right = 2 * i + 2; // right child
+
+        // Find the largest among root, left child and right child
+        if (left < n && arr[left] > arr[largest]) {
+            largest = left;
+        }
+        if (right < n && arr[right] > arr[largest]) {
+            largest = right;
+        }
+
+        // If root is not the largest, swap and continue heapifying
+        if (largest != i) {
+            int temp = arr[i];
+            arr[i] = arr[largest];
+            arr[largest] = temp;
+
+            maxHeapify(arr, n, largest);
+        }
+    }
+
+    // Testing the code
+    public static void main(String[] args) {
+        int[] nums1 = {10, 20, 30, 21, 23};
+        convertToMaxHeap(nums1);
+        System.out.println(Arrays.toString(nums1)); // Output: [30, 21, 23, 10, 20]
+
+        int[] nums2 = {-5, -4, -3, -2, -1};
+        convertToMaxHeap(nums2);
+        System.out.println(Arrays.toString(nums2)); // Output: [-1, -2, -3, -4, -5]
+    }
+}
