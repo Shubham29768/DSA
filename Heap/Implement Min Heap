@@ -1,0 +1,130 @@
+import java.util.*;
+
+public class MinHeap {
+    private List<Integer> heap;
+
+    // Initialize the heap
+    public void initializeHeap() {
+        heap = new ArrayList<>();
+    }
+
+    // Insert a value into the heap
+    public void insert(int x) {
+        heap.add(x);
+        heapifyUp(heap.size() - 1);
+    }
+
+    // Get the minimum element (root)
+    public Integer getMin() {
+        if (heap.isEmpty()) return null;
+        return heap.get(0);
+    }
+
+    // Remove the minimum element and reheapify
+    public void extractMin() {
+        if (heap.isEmpty()) return;
+        int last = heap.size() - 1;
+        Collections.swap(heap, 0, last);
+        heap.remove(last);
+        heapifyDown(0);
+    }
+
+    // Return heap size
+    public int heapSize() {
+        return heap.size();
+    }
+
+    // Check if heap is empty
+    public int isEmpty() {
+        return heap.isEmpty() ? 1 : 0;
+    }
+
+    // Change value at given index and reheapify
+    public void changeKey(int ind, int val) {
+        if (ind < 0 || ind >= heap.size()) return;
+        int oldVal = heap.get(ind);
+        heap.set(ind, val);
+        if (val < oldVal) {
+            heapifyUp(ind);
+        } else {
+            heapifyDown(ind);
+        }
+    }
+
+    // Helper method: move node up
+    private void heapifyUp(int i) {
+        while (i > 0) {
+            int parent = (i - 1) / 2;
+            if (heap.get(i) < heap.get(parent)) {
+                Collections.swap(heap, i, parent);
+                i = parent;
+            } else break;
+        }
+    }
+
+    // Helper method: move node down
+    private void heapifyDown(int i) {
+        int n = heap.size();
+        while (i < n) {
+            int left = 2 * i + 1;
+            int right = 2 * i + 2;
+            int smallest = i;
+
+            if (left < n && heap.get(left) < heap.get(smallest)) {
+                smallest = left;
+            }
+            if (right < n && heap.get(right) < heap.get(smallest)) {
+                smallest = right;
+            }
+
+            if (smallest != i) {
+                Collections.swap(heap, i, smallest);
+                i = smallest;
+            } else break;
+        }
+    }
+
+    // For testing the functionality
+    public static void main(String[] args) {
+        MinHeap minHeap = new MinHeap();
+        String[] operations = { "initializeheap", "insert", "insert", "insert", "getMin", "heapSize", "isEmpty", "extractMin", "changeKey", "getMin" };
+        int[][] nums = { {4}, {1}, {10}, {0, 16} };
+
+        List<Object> result = new ArrayList<>();
+        int numsIndex = 0;
+
+        for (String op : operations) {
+            switch (op) {
+                case "initializeheap":
+                    minHeap.initializeHeap();
+                    result.add(null);
+                    break;
+                case "insert":
+                    minHeap.insert(nums[numsIndex][0]);
+                    numsIndex++;
+                    result.add(null);
+                    break;
+                case "getMin":
+                    result.add(minHeap.getMin());
+                    break;
+                case "heapSize":
+                    result.add(minHeap.heapSize());
+                    break;
+                case "isEmpty":
+                    result.add(minHeap.isEmpty());
+                    break;
+                case "extractMin":
+                    minHeap.extractMin();
+                    result.add(null);
+                    break;
+                case "changeKey":
+                    minHeap.changeKey(nums[numsIndex][0], nums[numsIndex][1]);
+                    numsIndex++;
+                    result.add(null);
+                    break;
+            }
+        }
+
+        System.out.println(result);
+    }
+}
